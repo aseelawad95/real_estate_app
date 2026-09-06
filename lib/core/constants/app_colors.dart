@@ -12,4 +12,8 @@ class AppColors{
   static Color grayColor = const Color(0xffC5C6CF);
   static Color borderColor = const Color(0xff795900);
 
+   static Color dangerColor = const Color(0xffD64545);
+  static Color dangerBackground = const Color(0xffFCE8E8);
+  static Color primaryText = const Color(0xff1A1F1E);
+
 }

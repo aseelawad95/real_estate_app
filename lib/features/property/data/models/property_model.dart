@@ -15,7 +15,7 @@ class PropertyModel {
   final String typeIcon;
   final String ownerName;
   final List<String> images;
-  final List<dynamic> reviews;   // <-- كان String? صار List<dynamic>
+  final List<dynamic> reviews;   
 
   PropertyModel({
     required this.id,
@@ -32,7 +32,7 @@ class PropertyModel {
     required this.typeIcon,
     required this.ownerName,
     required this.images,
-    this.reviews = const [],     // <-- default بدل required this.reviews
+    this.reviews = const [],    
   });
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -51,7 +51,7 @@ class PropertyModel {
       typeIcon: json['typeIcon'] ?? '',
       ownerName: json['ownerName'] ?? '',
       images: List<String>.from(json['images'] ?? []),
-      reviews: json['reviews'] ?? [],   // <-- بدون تحويل String
+      reviews: json['reviews'] ?? [],   
     );
   }
 

@@ -26,16 +26,29 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 17),
+          padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 17),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
                   children: [
                     HeaderBody(),
-                    SizedBox(height: context.h(20)),
+                    SizedBox(height: context.h(25)),
                     SearchField(),
                     SizedBox(height: context.h(25)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomText(
+                          text: "Property Type",
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        CustomText(text: "See all",color: AppColors.secondaryText,),
+                      ],
+                    ),
+                    SizedBox(height: context.h(10)),
                     BlocProvider(
                       create: (_) =>
                           sl<PropertyTypeCubit>()..getAllPropertyTypes(),

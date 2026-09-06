@@ -6,16 +6,17 @@ import 'package:real_estate/features/propertyType/domain/usecase/property_type_u
 part 'property_type_state.dart';
 
 class PropertyTypeCubit extends Cubit<PropertyTypeState> {
-  
-
   final PropertyTypeUseCase propertyTypeUseCase;
 
-   PropertyTypeCubit(this.propertyTypeUseCase) : super(PropertyTypeInitial());
+  PropertyTypeCubit(this.propertyTypeUseCase) : super(PropertyTypeInitial());
 
   Future<void> getAllPropertyTypes() async {
+    if (isClosed) return;
     emit(PropertyTypeLoading());
 
     final result = await propertyTypeUseCase.call();
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(PropertyTypeError(failure.message.toString())),

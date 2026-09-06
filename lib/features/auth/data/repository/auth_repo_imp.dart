@@ -25,8 +25,6 @@ Future<Either<dynamic, dynamic>> signin(LoginModel loginReq) async {
   }
   try {
     final token = response.data['accessToken'];
-    final userId = response.data['userId']; 
-     debugPrint("userId :${userId}");
     if (token == null) {
       return Left('Token not found in response');
     }
@@ -34,9 +32,7 @@ Future<Either<dynamic, dynamic>> signin(LoginModel loginReq) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
-      if (userId != null) {
-        await prefs.setString('userId', userId.toString());
-      }
+     
     } catch (e) {
       print('SharedPreferences error: $e');
     }

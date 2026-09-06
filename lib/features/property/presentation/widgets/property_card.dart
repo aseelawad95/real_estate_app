@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:real_estate/core/helper_function/shared_prefs.dart';
 
 /// Reusable property listing card (Bayut/Aqarmap style).
 class PropertyCard extends StatefulWidget {
+  final int id;
   final String imageUrl;
   final double price;
   final String title;
@@ -16,6 +18,7 @@ class PropertyCard extends StatefulWidget {
 
   const PropertyCard({
     super.key,
+    required this.id,
     required this.imageUrl,
     required this.price,
     required this.title,
@@ -34,13 +37,19 @@ class PropertyCard extends StatefulWidget {
 }
 
 class _PropertyCardState extends State<PropertyCard> {
-  late bool _isFavorite = widget.initialIsFavorite;
+   String get _favoriteKey => 'favorite_${widget.id}';
 
-  void _toggleFavorite() {
-    setState(() => _isFavorite = !_isFavorite);
-    widget.onFavoriteChanged?.call(_isFavorite);
+  late bool _isFavorite =
+      SharedPrefsHelper.instance.getBool(_favoriteKey) ?? widget.initialIsFavorite;
+
+  Future<void> _toggleFavorite() async {
+    final newValue = !_isFavorite;
+    setState(() => _isFavorite = newValue);
+
+    await SharedPrefsHelper.instance.setBool(_favoriteKey, newValue);
+
+    widget.onFavoriteChanged?.call(newValue);
   }
-
   @override
   Widget build(BuildContext context) {
     return Material(

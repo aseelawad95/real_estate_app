@@ -9,5 +9,8 @@ class ApiUrls {
   static const propertyType = '${baseURL}PropertyTypes';
   static const property = '${baseURL}Properties';
   static const favorites = '${baseURL}Favorites';
+  static const locations = '${baseURL}Locations';
   static String favoritesByUserId(String userId) => '$favorites/$userId';
+  static const user = '${baseURL}UserManagements/Users';
+  static String userByUserId(String userId) => '$user/$userId';
 }

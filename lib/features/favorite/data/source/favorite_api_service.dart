@@ -16,7 +16,7 @@ class FavoriteApiServiceImp extends FavoriteApiService{
   Future<Either<Failure, List<FavoriteModel>>> getFavoritesByUserId(String userId) async {
     try {
       final response = await sl<DioClient>().get(ApiUrls.favoritesByUserId(userId));
-
+         print(userId);
       final List<FavoriteModel> favorites = (response.data['data'] as List)
           .map((json) => FavoriteModel.fromJson(json))
           .toList();

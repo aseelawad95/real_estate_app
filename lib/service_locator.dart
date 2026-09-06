@@ -12,10 +12,22 @@ import 'package:real_estate/features/favorite/data/source/favorite_api_service.d
 import 'package:real_estate/features/favorite/domain/repository/favorite_repo.dart';
 import 'package:real_estate/features/favorite/domain/usecase/favorite_usecase.dart';
 import 'package:real_estate/features/favorite/presentation/bloc/getFavoriteUser/get_favorite_user_cubit.dart';
+import 'package:real_estate/features/location/data/repository/location_repo_impl.dart';
+import 'package:real_estate/features/location/data/source/location_apiservice.dart';
+import 'package:real_estate/features/location/domain/repository/location_repo.dart';
+import 'package:real_estate/features/location/domain/usecase/location_usecase.dart';
+import 'package:real_estate/features/location/presentation/bloc/getlocation/getlocation_cubit.dart';
+import 'package:real_estate/features/profile/data/repository/profile_repo_impl.dart';
+import 'package:real_estate/features/profile/data/source/profile_api_service.dart';
+import 'package:real_estate/features/profile/domain/repository/profile_repo.dart';
+import 'package:real_estate/features/profile/domain/usecase/profile_usecase.dart';
+import 'package:real_estate/features/profile/presentation/bloc/get_userby_id/get_userby_id_cubit.dart';
 import 'package:real_estate/features/property/data/repository/property_repo_imp.dart';
 import 'package:real_estate/features/property/data/source/property_api_service.dart';
 import 'package:real_estate/features/property/domain/repository/property_repo.dart';
+import 'package:real_estate/features/property/domain/usecase/create_property_usecase.dart';
 import 'package:real_estate/features/property/domain/usecase/property_usecase.dart';
+import 'package:real_estate/features/property/presentation/bloc/createproperty/createproperty_cubit.dart';
 import 'package:real_estate/features/property/presentation/bloc/getproperty/getproperty_cubit.dart';
 import 'package:real_estate/features/propertyType/data/repository/property_type_repo_imp.dart';
 import 'package:real_estate/features/propertyType/data/source/property_type_apiservice.dart';
@@ -33,6 +45,10 @@ void setupServiceLocator() {
   sl.registerSingleton<PropertyTypeApiService>(PropertyTypeApiServiceImp());
   sl.registerSingleton<PropertyApiService>(PropertyApiServiceImp());
   sl.registerSingleton<FavoriteApiService>(FavoriteApiServiceImp());
+  sl.registerSingleton<LocationApiService>(LocationApiServiceImp());
+   sl.registerSingleton<ProfileApiService>(
+    ProfileApiServiceImp()
+  );
 
 
 
@@ -51,6 +67,12 @@ void setupServiceLocator() {
   sl.registerSingleton<FavoriteRepository>(
     FavoriteRepositoryImpl(sl<FavoriteApiService>()),
   );
+  sl.registerSingleton<LocationRepository>(
+    LocationRepositoryImpl(sl<LocationApiService>()),
+  );
+  sl.registerSingleton<ProfileRepository>(
+    UserRepositoryImpl(sl<ProfileApiService>())
+  );
 
   // Usecases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase());
@@ -60,9 +82,9 @@ void setupServiceLocator() {
   sl.registerLazySingleton<PropertyTypeUseCase>(() => PropertyTypeUseCase());
   sl.registerLazySingleton<PropertyUseCase>(() => PropertyUseCase());
   sl.registerLazySingleton<GetFavoritesByUserIdUseCase>(() => GetFavoritesByUserIdUseCase());
-
-
-
+  sl.registerLazySingleton<LocationUseCase>(() => LocationUseCase());
+  sl.registerLazySingleton<CreatePropertyUseCase>(() => CreatePropertyUseCase());
+  sl.registerLazySingleton<GetUserByIdUseCase>(() => GetUserByIdUseCase());
   // Cubits
   sl.registerFactory<PropertyTypeCubit>(
     () => PropertyTypeCubit(sl<PropertyTypeUseCase>()),
@@ -74,5 +96,14 @@ void setupServiceLocator() {
 
   sl.registerFactory<GetFavoriteUserCubit>(
     () => GetFavoriteUserCubit(sl<GetFavoritesByUserIdUseCase>()),
+  );
+  sl.registerFactory<GetlocationCubit>(
+    () => GetlocationCubit(sl<LocationUseCase>()),
+  );
+   sl.registerFactory<CreatepropertyCubit>(
+    () => CreatepropertyCubit(sl<CreatePropertyUseCase>()),
+  );
+  sl.registerFactory<GetUserbyIdCubit>(
+    () => GetUserbyIdCubit(sl<GetUserByIdUseCase>()),
   );
 }

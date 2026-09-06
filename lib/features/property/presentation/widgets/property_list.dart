@@ -46,13 +46,14 @@ class PropertyListPage extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: PropertyCard(
+                     id: p.id,
                     sqft: p.area,
                     baths: p.bathrooms,
                     beds: p.bathrooms,
                     imageUrl: p.images.isNotEmpty ? p.images[0] : '',
                     price: p.price,
                     title: p.title ?? "",
-                    location: p.status,
+                    location: p.typeName ,
                    isVerified: true,
                     // area: p.area,
                     // approvalStatus: p.approvalStatus,
