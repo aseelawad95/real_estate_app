@@ -1,8 +1,8 @@
-import 'package:real_estate/features/location/data/models/location_model.dart';
 import 'package:real_estate/features/property/data/models/owner_model.dart';
-import 'package:real_estate/features/property/domain/entities/property.dart';
+import 'package:real_estate/features/location/data/models/location_model.dart';
+import 'package:real_estate/features/property/domain/entities/property_details.dart';
 
-class PropertyModel {
+class PropertyDetailsModel {
   final int id;
   final String? title;
   final String? description;
@@ -21,7 +21,7 @@ class PropertyModel {
   final bool isFavourite;
   final LocationModel? location;
 
-  PropertyModel({
+  PropertyDetailsModel({
     required this.id,
     this.title,
     this.description,
@@ -38,11 +38,11 @@ class PropertyModel {
     required this.images,
     this.reviews = const [],
     this.isFavourite = false,
-     this.location,
+    this.location,
   });
 
-  factory PropertyModel.fromJson(Map<String, dynamic> json) {
-    return PropertyModel(
+  factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
+    return PropertyDetailsModel(
       id: json['id'] ?? 0,
       title: json['title'],
       description: json['description'],
@@ -59,7 +59,7 @@ class PropertyModel {
       images: List<String>.from(json['images'] ?? []),
       reviews: json['reviews'] ?? [],
       isFavourite: json['isLiked'] ?? false,
-       location: json['location'] != null
+      location: json['location'] != null
           ? LocationModel.fromJson(json['location'])
           : null,
     );
@@ -87,8 +87,8 @@ class PropertyModel {
     };
   }
 
-  Property toEntity() {
-    return Property(
+  PropertyDetails toEntity() {
+    return PropertyDetails(
       id: id,
       title: title,
       description: description,

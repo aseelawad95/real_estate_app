@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:real_estate/core/constants/api_urls.dart';
 import 'package:real_estate/core/errors/server_failure.dart';
 import 'package:real_estate/core/network/dio_client.dart';
+import 'package:real_estate/features/property/data/models/property_details_model.dart';
 import 'package:real_estate/features/property/data/models/property_model.dart';
 import 'package:real_estate/features/property/domain/entities/create_property.dart';
 import 'package:real_estate/service_locator.dart';
@@ -12,6 +13,7 @@ import 'package:real_estate/service_locator.dart';
 abstract class PropertyApiService {
 Future<Either<Failure, List<PropertyModel>>> getAllProperties();
 Future<Either<Failure, PropertyModel>> createProperty(CreatePropertyParams property);
+Future<Either<Failure, PropertyDetailsModel>> getPropertyDetails(int id);
 }
 
 class PropertyApiServiceImp extends PropertyApiService{
@@ -92,6 +94,22 @@ class PropertyApiServiceImp extends PropertyApiService{
   } catch (e, stack) {
     debugPrint("GENERIC ERROR: $e");
     debugPrint("STACK TRACE: $stack");
+    return Left(ServerFailure(e.toString()));
+  }
+}
+
+ @override
+Future<Either<Failure, PropertyDetailsModel>> getPropertyDetails(int id) async {
+  try {
+    final response = await sl<DioClient>().get(ApiUrls.propertyDetails(id));
+
+    final PropertyDetailsModel propertyDetails =
+        PropertyDetailsModel.fromJson(response.data);
+
+    return Right(propertyDetails);
+  } on DioException catch (e) {
+    return Left(ServerFailure(e.response?.data['message'] ?? 'Unknown error'));
+  } catch (e) {
     return Left(ServerFailure(e.toString()));
   }
 }

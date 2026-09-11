@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:real_estate/features/location/domain/entities/location.dart';
 import 'package:real_estate/features/property/domain/entities/owner.dart';
+import 'package:real_estate/features/location/domain/entities/location.dart';
 
-class Property extends Equatable {
+class PropertyDetails extends Equatable {
   final int id;
   final String? title;
   final String? description;
@@ -21,7 +21,7 @@ class Property extends Equatable {
   final bool isFavourite;
   final Location? location;
 
-  const Property({
+  const PropertyDetails({
     required this.id,
     this.title,
     this.description,
@@ -41,8 +41,8 @@ class Property extends Equatable {
     this.location,
   });
 
-  Property copyWith({bool? isFavourite}) {
-    return Property(
+  PropertyDetails copyWith({bool? isFavourite}) {
+    return PropertyDetails(
       id: id,
       title: title,
       description: description,

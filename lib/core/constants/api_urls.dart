@@ -15,4 +15,5 @@ class ApiUrls {
   static String userByUserId(String userId) => '$user/$userId';
   static String favoriteToggle(int id, String userId) =>
       '${baseURL}Favorites/$id/toggle?customerId=$userId';
+      static String propertyDetails(int id) => '${baseURL}Properties/$id';
 }

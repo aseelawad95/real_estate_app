@@ -28,9 +28,11 @@ import 'package:real_estate/features/property/data/repository/property_repo_imp.
 import 'package:real_estate/features/property/data/source/property_api_service.dart';
 import 'package:real_estate/features/property/domain/repository/property_repo.dart';
 import 'package:real_estate/features/property/domain/usecase/create_property_usecase.dart';
+import 'package:real_estate/features/property/domain/usecase/property_details_usecase.dart';
 import 'package:real_estate/features/property/domain/usecase/property_usecase.dart';
 import 'package:real_estate/features/property/presentation/bloc/createproperty/createproperty_cubit.dart';
 import 'package:real_estate/features/property/presentation/bloc/getproperty/getproperty_cubit.dart';
+import 'package:real_estate/features/property/presentation/bloc/propertyDetails/property_details_cubit.dart';
 import 'package:real_estate/features/propertyType/data/repository/property_type_repo_imp.dart';
 import 'package:real_estate/features/propertyType/data/source/property_type_apiservice.dart';
 import 'package:real_estate/features/propertyType/domain/repository/property_type_repo.dart';
@@ -89,6 +91,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton<CreatePropertyUseCase>(() => CreatePropertyUseCase());
   sl.registerLazySingleton<GetUserByIdUseCase>(() => GetUserByIdUseCase());
   sl.registerLazySingleton<ToggleFavoriteUseCase>(() => ToggleFavoriteUseCase());
+   sl.registerLazySingleton<PropertyDetailsUseCase>(() => PropertyDetailsUseCase());
   
   // Cubits
   sl.registerFactory<PropertyTypeCubit>(
@@ -113,6 +116,10 @@ void setupServiceLocator() {
   );
   sl.registerFactory<ToggleFavoriteCubit>(
     () => ToggleFavoriteCubit(sl<ToggleFavoriteUseCase>()),
+  );
+
+  sl.registerFactory<PropertyDetailsCubit>(
+    () => PropertyDetailsCubit(sl<PropertyDetailsUseCase>()),
   );
   
 }

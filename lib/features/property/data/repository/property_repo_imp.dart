@@ -3,6 +3,7 @@ import 'package:real_estate/core/errors/server_failure.dart';
 import 'package:real_estate/features/property/data/source/property_api_service.dart';
 import 'package:real_estate/features/property/domain/entities/create_property.dart';
 import 'package:real_estate/features/property/domain/entities/property.dart';
+import 'package:real_estate/features/property/domain/entities/property_details.dart';
 import 'package:real_estate/features/property/domain/repository/property_repo.dart';
 
 
@@ -36,6 +37,16 @@ class  PropertyRepositoryImpl extends  PropertyRepository {
     },
   );
   }
+
+ @override
+Future<Either<Failure, PropertyDetails>> getPropertyDetails(int id) async {
+  final result = await propertyApiService.getPropertyDetails(id);
+
+  return result.fold(
+    (failure) => Left(failure),
+    (propertyDetailsModel) => Right(propertyDetailsModel.toEntity()),
+  );
+}
 
 
 }
