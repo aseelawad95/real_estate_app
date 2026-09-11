@@ -7,7 +7,6 @@ import 'package:real_estate/core/helper_function/responsiveExtension.dart';
 import 'package:real_estate/features/home/presentation/widgets/custom_search.dart';
 import 'package:real_estate/features/home/presentation/widgets/header_body.dart';
 import 'package:real_estate/features/property/presentation/bloc/getproperty/getproperty_cubit.dart';
-import 'package:real_estate/features/property/presentation/widgets/property_card.dart';
 import 'package:real_estate/features/property/presentation/widgets/property_list.dart';
 import 'package:real_estate/features/propertyType/presentation/bloc/property_type_cubit.dart';
 import 'package:real_estate/features/propertyType/presentation/widgets/container_widget.dart';
@@ -26,16 +25,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 17),
+          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 17),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
                   children: [
                     HeaderBody(),
-                    SizedBox(height: context.h(25)),
+                    SizedBox(height: context.h(15)),
                     SearchField(),
-                    SizedBox(height: context.h(25)),
+                    SizedBox(height: context.h(20)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

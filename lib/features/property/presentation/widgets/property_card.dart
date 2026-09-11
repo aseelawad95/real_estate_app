@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:real_estate/core/helper_function/TokenHelper.dart';
 import 'package:real_estate/core/helper_function/shared_prefs.dart';
+import 'package:real_estate/features/favorite/presentation/bloc/toggleFavorite/toggle_favorite_cubit.dart';
 
 /// Reusable property listing card (Bayut/Aqarmap style).
 class PropertyCard extends StatefulWidget {
@@ -37,19 +40,26 @@ class PropertyCard extends StatefulWidget {
 }
 
 class _PropertyCardState extends State<PropertyCard> {
-   String get _favoriteKey => 'favorite_${widget.id}';
+  late bool _isFavorite;
+  String? userId;
+  bool isLoading = true;
 
-  late bool _isFavorite =
-      SharedPrefsHelper.instance.getBool(_favoriteKey) ?? widget.initialIsFavorite;
-
-  Future<void> _toggleFavorite() async {
-    final newValue = !_isFavorite;
-    setState(() => _isFavorite = newValue);
-
-    await SharedPrefsHelper.instance.setBool(_favoriteKey, newValue);
-
-    widget.onFavoriteChanged?.call(newValue);
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.initialIsFavorite;
+    _loadUserId();
   }
+
+  Future<void> _loadUserId() async {
+    final id = await TokenHelper.getUserId();
+
+    setState(() {
+      userId = id;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -99,26 +109,28 @@ class _PropertyCardState extends State<PropertyCard> {
         fit: StackFit.expand,
         children: [
           widget.imageUrl.isNotEmpty
-    ? Image.network(
-        widget.imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(
-          color: const Color(0xFFE9ECEF),
-          child: const Icon(Icons.broken_image, size: 32),
-        ),
-      )
-    : Container(
-        color: const Color(0xFFE9ECEF),
-        child: const Icon(Icons.image_not_supported, size: 32),
-      ),
-          // Bottom gradient for price readability.
+              ? Image.network(
+                  widget.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: const Color(0xFFE9ECEF),
+                    child: const Icon(Icons.broken_image, size: 32),
+                  ),
+                )
+              : Container(
+                  color: const Color(0xFFE9ECEF),
+                  child: const Icon(Icons.image_not_supported, size: 32),
+                ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.center,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.55)],
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.55),
+                  ],
                 ),
               ),
             ),
@@ -170,18 +182,41 @@ class _PropertyCardState extends State<PropertyCard> {
   }
 
   Widget _buildFavoriteButton() {
-    return GestureDetector(
-      onTap: _toggleFavorite,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 246, 229, 229).withOpacity(0.25),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          _isFavorite ? Icons.favorite : Icons.favorite_border,
-          size: 18,
-          color: _isFavorite ? Colors.redAccent : Colors.white,
+    return BlocListener<ToggleFavoriteCubit, ToggleFavoriteState>(
+      listener: (context, state) {
+        if (state is ToggleFavoriteLoaded && state.propertyId == widget.id) {
+          setState(() => _isFavorite = state.isFavorited);
+          widget.onFavoriteChanged?.call(_isFavorite);
+        }
+        if (state is ToggleFavoriteError && state.propertyId == widget.id) {
+          setState(() => _isFavorite = !_isFavorite);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: GestureDetector(
+        onTap: () {
+          if (userId == null) return;
+
+          setState(() => _isFavorite = !_isFavorite);
+
+          context.read<ToggleFavoriteCubit>().toggleFavorite(
+            widget.id,
+            userId!,
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 246, 229, 229).withOpacity(0.25),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            _isFavorite ? Icons.favorite : Icons.favorite_border,
+            size: 18,
+            color: _isFavorite ? Colors.redAccent : Colors.white,
+          ),
         ),
       ),
     );
@@ -234,34 +269,3 @@ class _PropertyCardState extends State<PropertyCard> {
     );
   }
 }
-
-// // ---------------------------------------------------------------------------
-// // Usage example
-// // ---------------------------------------------------------------------------
-// class PropertyCardDemo extends StatelessWidget {
-//   const PropertyCardDemo({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFFF2F4F7),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16),
-//         child: PropertyCard(
-//           imageUrl: 'https://your-image-url.com/villa.jpg',
-//           price: '\$12,450,000',
-//           title: 'The Azure Horizon Villa',
-//           location: 'Dubai Marina, UAE',
-//           beds: 6,
-//           baths: 8,
-//           sqft: 12500,
-//           isVerified: true,
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// 13. Bonus: صمّم POST /orders بحيث لو نفس الطلب وصل 10 مرات بسبب retries لا ينشئ أكثر من Order، حتى مع وصول الطلبات بالتوازي.
-// Idempotency key 

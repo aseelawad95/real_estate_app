@@ -30,7 +30,7 @@ class GetUserBlocBuilderBody extends StatelessWidget {
           return ProfileHeader(
             name: user.userName,
             email: user.email,
-            avatarUrl: 'https://i.pravatar.cc/150?img=47',
+            // avatarUrl: 'https://i.pravatar.cc/150?img=47',
           );
         }
         return const SizedBox.shrink();

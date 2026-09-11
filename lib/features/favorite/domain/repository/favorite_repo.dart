@@ -4,5 +4,5 @@ import 'package:real_estate/features/favorite/domain/entities/favorite_entity.da
 
 abstract class FavoriteRepository {
      Future<Either<Failure, List<FavoriteEntity>>> getFavoritesByUserId(String userId);
-
+     Future<Either<Failure, bool>> toggleFavorite(int id, String userId);
 }

@@ -13,4 +13,6 @@ class ApiUrls {
   static String favoritesByUserId(String userId) => '$favorites/$userId';
   static const user = '${baseURL}UserManagements/Users';
   static String userByUserId(String userId) => '$user/$userId';
+  static String favoriteToggle(int id, String userId) =>
+      '${baseURL}Favorites/$id/toggle?customerId=$userId';
 }

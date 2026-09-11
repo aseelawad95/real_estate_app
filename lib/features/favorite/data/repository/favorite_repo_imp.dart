@@ -25,6 +25,9 @@ class  FavoriteRepositoryImpl extends  FavoriteRepository {
       },
     );
   }
-
+@override
+  Future<Either<Failure, bool>> toggleFavorite(int id, String userId) async {
+    return await favoriteApiService.toggleFavorite(id, userId);
+  }
 
 }

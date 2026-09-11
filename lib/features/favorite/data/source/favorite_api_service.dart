@@ -9,6 +9,7 @@ import 'package:real_estate/service_locator.dart';
 
 abstract class FavoriteApiService {
   Future<Either<Failure, List<FavoriteModel>>> getFavoritesByUserId(String userId);
+   Future<Either<Failure, bool>> toggleFavorite(int id, String userId);
 }
 
 class FavoriteApiServiceImp extends FavoriteApiService{
@@ -27,6 +28,27 @@ class FavoriteApiServiceImp extends FavoriteApiService{
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
+  }
+
+  @override
+Future<Either<Failure, bool>> toggleFavorite(int id, String userId) async {
+  try {
+    final response = await sl<DioClient>().post(
+      ApiUrls.favoriteToggle(id, userId),
+    );
+
+    final bool isFavorited = response.data['isFavorited'] as bool;
+
+    return Right(isFavorited);
+  } on DioException catch (e) {
+    print('Status code: ${e.response?.statusCode}');
+    print('Response data: ${e.response?.data}');
+    print('Response data type: ${e.response?.data.runtimeType}');
+    return Left(ServerFailure(e.message ?? 'Unknown error'));
+  } catch (e) {
+    return Left(ServerFailure(e.toString()));
+  }
+
   }
 
 }

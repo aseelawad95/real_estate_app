@@ -15,7 +15,8 @@ class PropertyModel {
   final String typeIcon;
   final String ownerName;
   final List<String> images;
-  final List<dynamic> reviews;   
+  final List<dynamic> reviews;
+  final bool isFavourite; // 1️⃣ ضفنا الحقل هون
 
   PropertyModel({
     required this.id,
@@ -32,7 +33,8 @@ class PropertyModel {
     required this.typeIcon,
     required this.ownerName,
     required this.images,
-    this.reviews = const [],    
+    this.reviews = const [],
+    this.isFavourite = false,
   });
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
@@ -51,7 +53,8 @@ class PropertyModel {
       typeIcon: json['typeIcon'] ?? '',
       ownerName: json['ownerName'] ?? '',
       images: List<String>.from(json['images'] ?? []),
-      reviews: json['reviews'] ?? [],   
+      reviews: json['reviews'] ?? [],
+      isFavourite: json['isLiked'] ?? false, 
     );
   }
 
@@ -72,6 +75,7 @@ class PropertyModel {
       'ownerName': ownerName,
       'images': images,
       'reviews': reviews,
+      'isLiked': isFavourite,
     };
   }
 
@@ -92,6 +96,7 @@ class PropertyModel {
       ownerName: ownerName,
       images: images,
       reviews: reviews,
+      isFavourite: isFavourite, 
     );
   }
 }

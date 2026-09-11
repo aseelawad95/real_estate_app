@@ -16,6 +16,7 @@ class Property extends Equatable {
   final String ownerName;
   final List<String> images;
   final List<dynamic> reviews;
+  final bool isFavourite;
 
   const Property({
     required this.id,
@@ -33,7 +34,29 @@ class Property extends Equatable {
     required this.ownerName,
     required this.images,
     this.reviews = const [],
+    this.isFavourite = false,
   });
+
+  Property copyWith({bool? isFavourite}) {
+    return Property(
+      id: id,
+      title: title,
+      description: description,
+      price: price,
+      area: area,
+      bedrooms: bedrooms,
+      bathrooms: bathrooms,
+      status: status,
+      listingType: listingType,
+      approvalStatus: approvalStatus,
+      typeName: typeName,
+      typeIcon: typeIcon,
+      ownerName: ownerName,
+      images: images,
+      reviews: reviews,
+      isFavourite: isFavourite ?? this.isFavourite,
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -52,5 +75,6 @@ class Property extends Equatable {
         ownerName,
         images,
         reviews,
+        isFavourite,
       ];
 }

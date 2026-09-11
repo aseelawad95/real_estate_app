@@ -5,18 +5,20 @@ import 'package:real_estate/features/profile/presentation/pages/profile_page.dar
 
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, 
+  const ProfileHeader({
+    super.key,
     required this.name,
     required this.email,
-    required this.avatarUrl,
   });
 
   final String name;
   final String email;
-  final String avatarUrl;
 
   @override
   Widget build(BuildContext context) {
+    final String firstLetter =
+        name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : '?';
+
     return Column(
       children: [
         Stack(
@@ -24,8 +26,15 @@ class ProfileHeader extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 44,
-              backgroundColor: AppColors.textFieldColor,
-              backgroundImage: NetworkImage(avatarUrl),
+              backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+              child: Text(
+                firstLetter,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
             Positioned(
               bottom: 0,

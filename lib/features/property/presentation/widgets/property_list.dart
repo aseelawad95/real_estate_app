@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:real_estate/features/favorite/presentation/bloc/toggleFavorite/toggle_favorite_cubit.dart';
 import 'package:real_estate/features/property/domain/entities/property.dart';
 import 'package:real_estate/features/property/presentation/bloc/getproperty/getproperty_cubit.dart';
 import 'package:real_estate/features/property/presentation/widgets/property_card.dart';
+import 'package:real_estate/service_locator.dart';
 
 class PropertyListPage extends StatelessWidget {
   const PropertyListPage({super.key, this.properties});
@@ -13,58 +15,61 @@ class PropertyListPage extends StatelessWidget {
     return BlocListener<GetpropertyCubit, GetpropertyState>(
       listener: (context, state) {
         if (state is GetpropertyError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
-        
       },
-      child: BlocBuilder<GetpropertyCubit, GetpropertyState>(
-        builder: (context, state) {
-          if (state is GetpropertyLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is GetpropertyError) {
-            debugPrint("err:${state.message}");
-            return Center(child: Text(state.message));
-          }
-
-          if (state is GetpropertyLoaded) {
-            final properties = state.property;
-            
-            if (properties.isEmpty) {
-              return const Center(child: Text('No properties found'));
+      child: BlocProvider(
+        create: (_) => sl<ToggleFavoriteCubit>(),
+        child: BlocBuilder<GetpropertyCubit, GetpropertyState>(
+          builder: (context, state) {
+            if (state is GetpropertyLoading) {
+              return const Center(child: CircularProgressIndicator());
             }
 
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                final p = properties[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: PropertyCard(
-                     id: p.id,
-                    sqft: p.area,
-                    baths: p.bathrooms,
-                    beds: p.bathrooms,
-                    imageUrl: p.images.isNotEmpty ? p.images[0] : '',
-                    price: p.price,
-                    title: p.title ?? "",
-                    location: p.typeName ,
-                   isVerified: true,
-                    // area: p.area,
-                    // approvalStatus: p.approvalStatus,
-                  ),
-                );
-              },
-            );
-          }
+            if (state is GetpropertyError) {
+              debugPrint("err:${state.message}");
+              return Center(child: Text(state.message));
+            }
 
-          return const SizedBox.shrink();
-        },
+            if (state is GetpropertyLoaded) {
+              final properties = state.property;
+
+              if (properties.isEmpty) {
+                return const Center(child: Text('No properties found'));
+              }
+
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: properties.length,
+                itemBuilder: (context, index) {
+                  final p = properties[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: PropertyCard(
+                      initialIsFavorite: p.isFavourite,
+                      id: p.id,
+                      sqft: p.area,
+                      baths: p.bathrooms,
+                      beds: p.bedrooms,
+                      imageUrl: p.images.isNotEmpty ? p.images[0] : '',
+                      price: p.price,
+                      title: p.title ?? "",
+                      location: p.typeName,
+                      isVerified: true,
+                      // area: p.area,
+                      // approvalStatus: p.approvalStatus,
+                    ),
+                  );
+                },
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
