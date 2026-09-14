@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate/core/constants/app_colors.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:real_estate/features/location/domain/entities/location.dart';
+import 'package:real_estate/features/property/presentation/widgets/location_map.dart';
 
 class MapPreview extends StatelessWidget {
-  const MapPreview({super.key});
+  const MapPreview({super.key, required this.location});
+
+  final Location location;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 140,
-        width: double.infinity,
-        color: const Color(0xFFDCE6E0),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // TODO: استبدل هذا بـ GoogleMap widget الحقيقي
-            Container(color: const Color(0xFFE3ECE6)),
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 3),
+    final position = LatLng(location.latitude, location.longitude);
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => LocationMapScreen(location: location),
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
+          height: 140,
+          width: double.infinity,
+          child: AbsorbPointer(
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: position,
+                zoom: 15,
               ),
-              child: const Icon(Icons.location_on,
-                  color: Colors.white, size: 18),
+              markers: {
+                Marker(
+                  markerId: const MarkerId('preview'),
+                  position: position,
+                ),
+              },
+              zoomControlsEnabled: false,
+              scrollGesturesEnabled: false,
+              rotateGesturesEnabled: false,
+              tiltGesturesEnabled: false,
+              liteModeEnabled: true,
             ),
-          ],
+          ),
         ),
       ),
     );

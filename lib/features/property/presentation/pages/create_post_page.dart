@@ -40,7 +40,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
   PropertyType? _selectedPropertyType;
   Location? _selectedLocation;
-  int? _ownerId;
    String? userId;
   bool isLoading = true;
   Key _propertyTypeKey = UniqueKey();
@@ -49,17 +48,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
   @override
   void initState() {
     super.initState();
-    // _loadOwnerId();
     _loadUserId();
   }
 
-  // Future<void> _loadOwnerId() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final userIdString = prefs.getString('userId');
-  //   setState(() {
-  //     _ownerId = userIdString != null ? int.tryParse(userIdString) : null;
-  //   });
-  // }
+ 
 
   void _resetForm() {
     _titleController.clear();

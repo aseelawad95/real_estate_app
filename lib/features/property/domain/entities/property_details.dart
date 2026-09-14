@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:real_estate/features/property/domain/entities/owner.dart';
 import 'package:real_estate/features/location/domain/entities/location.dart';
+import 'package:real_estate/features/property/domain/entities/review.dart';
 
 class PropertyDetails extends Equatable {
   final int id;
@@ -17,7 +18,7 @@ class PropertyDetails extends Equatable {
   final String typeIcon;
   final Owner owner;
   final List<String> images;
-  final List<dynamic> reviews;
+  final List<Review> reviews;
   final bool isFavourite;
   final Location? location;
 

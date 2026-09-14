@@ -9,14 +9,15 @@ class ImageGallery extends StatelessWidget {
     required this.images,
     required this.currentIndex,
     required this.pageController,
-    required this.onPageChanged,
+    required this.onPageChanged, required this.isFavorite,
   });
 
   final List<String> images;
   final int currentIndex;
   final PageController pageController;
   final ValueChanged<int> onPageChanged;
-  
+  final bool isFavorite;
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +80,7 @@ class ImageGallery extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                       CircleIconButton(
-                        icon: Icons.favorite,
+                        icon:isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
                         onTap: () {
                           // TODO: مشاركة العقار
                         },

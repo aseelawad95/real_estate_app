@@ -1,4 +1,5 @@
 import 'package:real_estate/features/property/data/models/owner_model.dart';
+import 'package:real_estate/features/property/data/models/review_model.dart';
 import 'package:real_estate/features/location/data/models/location_model.dart';
 import 'package:real_estate/features/property/domain/entities/property_details.dart';
 
@@ -17,7 +18,7 @@ class PropertyDetailsModel {
   final String typeIcon;
   final OwnerModel owner;
   final List<String> images;
-  final List<dynamic> reviews;
+  final List<ReviewModel> reviews;
   final bool isFavourite;
   final LocationModel? location;
 
@@ -57,7 +58,9 @@ class PropertyDetailsModel {
       typeIcon: json['typeIcon'] ?? '',
       owner: OwnerModel.fromJson(json),
       images: List<String>.from(json['images'] ?? []),
-      reviews: json['reviews'] ?? [],
+      reviews: (json['reviews'] as List<dynamic>? ?? [])
+          .map((r) => ReviewModel.fromJson(r as Map<String, dynamic>))
+          .toList(),
       isFavourite: json['isLiked'] ?? false,
       location: json['location'] != null
           ? LocationModel.fromJson(json['location'])
@@ -81,7 +84,7 @@ class PropertyDetailsModel {
       'typeIcon': typeIcon,
       ...owner.toJson(),
       'images': images,
-      'reviews': reviews,
+      'reviews': reviews.map((r) => r.toJson()).toList(),
       'isLiked': isFavourite,
       'location': location?.toJson(),
     };
@@ -103,7 +106,7 @@ class PropertyDetailsModel {
       typeIcon: typeIcon,
       owner: owner.toEntity(),
       images: images,
-      reviews: reviews,
+      reviews: reviews.map((r) => r.toEntity()).toList(),
       isFavourite: isFavourite,
       location: location?.toEntity(),
     );

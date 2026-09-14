@@ -1,5 +1,4 @@
 class ApiUrls {
-
   static const baseURL = 'https://aseelrealestate.runasp.net/api/';
   static const register = '${baseURL}Auth/register';
   static const userProfile = '${baseURL}users/profile';
@@ -14,6 +13,9 @@ class ApiUrls {
   static const user = '${baseURL}UserManagements/Users';
   static String userByUserId(String userId) => '$user/$userId';
   static String favoriteToggle(int id, String userId) =>
-      '${baseURL}Favorites/$id/toggle?customerId=$userId';
-      static String propertyDetails(int id) => '${baseURL}Properties/$id';
+  '${baseURL}Favorites/$id/toggle?customerId=$userId';
+  static String propertyDetails(int id) => '${baseURL}Properties/$id';
+  
+  static const appointment = '${baseURL}Appointments';
+
 }

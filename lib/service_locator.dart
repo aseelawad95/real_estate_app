@@ -1,5 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:real_estate/core/network/dio_client.dart';
+import 'package:real_estate/features/appoinment/data/repository/appointment_repo_impl.dart';
+import 'package:real_estate/features/appoinment/data/source/appointment_apiservice.dart';
+import 'package:real_estate/features/appoinment/domain/repository/appointment_repo.dart';
+import 'package:real_estate/features/appoinment/domain/usecase/create_appointment_usecase.dart';
+import 'package:real_estate/features/appoinment/presentation/bloc/createAppointment/create_appointment_cubit.dart';
 import 'package:real_estate/features/auth/data/repository/auth_repo_imp.dart';
 import 'package:real_estate/features/auth/data/source/auth_service.dart';
 import 'package:real_estate/features/auth/domain/repository/auth_repo.dart';
@@ -53,6 +58,7 @@ void setupServiceLocator() {
    sl.registerSingleton<ProfileApiService>(
     ProfileApiServiceImp()
   );
+   sl.registerSingleton<AppointmentApiservice>(AppointmentApiserviceImpl());
 
 
 
@@ -78,6 +84,9 @@ void setupServiceLocator() {
   sl.registerSingleton<ProfileRepository>(
     UserRepositoryImpl(sl<ProfileApiService>())
   );
+  sl.registerSingleton<AppointmentRepo>(
+    AppointmentRepoImpl(sl<AppointmentApiservice>())
+  );
 
   // Usecases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase());
@@ -92,6 +101,8 @@ void setupServiceLocator() {
   sl.registerLazySingleton<GetUserByIdUseCase>(() => GetUserByIdUseCase());
   sl.registerLazySingleton<ToggleFavoriteUseCase>(() => ToggleFavoriteUseCase());
    sl.registerLazySingleton<PropertyDetailsUseCase>(() => PropertyDetailsUseCase());
+      sl.registerLazySingleton<CreateAppointmentUseCase>(() => CreateAppointmentUseCase());
+
   
   // Cubits
   sl.registerFactory<PropertyTypeCubit>(
@@ -120,6 +131,10 @@ void setupServiceLocator() {
 
   sl.registerFactory<PropertyDetailsCubit>(
     () => PropertyDetailsCubit(sl<PropertyDetailsUseCase>()),
+  );
+
+   sl.registerFactory<CreateappointmentCubit>(
+    () => CreateappointmentCubit(sl<CreateAppointmentUseCase>()),
   );
   
 }
