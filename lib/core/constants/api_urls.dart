@@ -16,7 +16,7 @@ class ApiUrls {
   static String favoriteToggle(int id, String userId) =>
   '${baseURL}Favorites/$id/toggle?customerId=$userId';
   static String propertyDetails(int id) => '${baseURL}Properties/$id';
-  
+   static const notifications = '${baseURL}Notifications';
   static const appointment = '${baseURL}Appointments';
 
 }
