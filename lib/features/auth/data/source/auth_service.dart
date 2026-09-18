@@ -26,7 +26,7 @@ class AuthApiServiceImpl extends AuthApiService {
         ApiUrls.login,
         data: loginReq.toMap()
       );
-
+        
       return Right(response);
 
     } on DioException catch(e) {

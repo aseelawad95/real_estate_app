@@ -16,7 +16,7 @@ class GetUserBlocBuilderBody extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is GetUserByIdError) {
-          print('Error loading user data: ${state.message}'); // Debugging line
+          debugPrint('Error loading user data: ${state.message}');
           return SizedBox(
             height: 200,
             child: Center(

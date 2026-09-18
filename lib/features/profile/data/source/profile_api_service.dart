@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:real_estate/core/constants/api_urls.dart';
 
 import 'package:real_estate/core/errors/server_failure.dart';
@@ -18,11 +19,11 @@ class ProfileApiServiceImp extends ProfileApiService{
  Future<Either<Failure, UserModel>> getUserById(String userId) async {
     try {
       final response = await sl<DioClient>().get(ApiUrls.userByUserId(userId));
-      print('Response data: ${response.data}');
+      debugPrint("userId : $userId");
+      debugPrint('Response data: ${response.data}');
 
-      final List<dynamic> dataList = response.data as List<dynamic>;
-      print('🔥 First item: ${dataList.first}');
-      final UserModel user = UserModel.fromJson(dataList.first as Map<String, dynamic>);
+   final Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      final UserModel user = UserModel.fromJson(data);
 
       return Right(user);
     } on DioException catch (e) {

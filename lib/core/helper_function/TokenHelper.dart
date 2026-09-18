@@ -5,6 +5,14 @@ class TokenHelper {
   static const String _nameIdentifierClaim =
       'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier';
 
+
+
+static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  
   static Future<String?> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');

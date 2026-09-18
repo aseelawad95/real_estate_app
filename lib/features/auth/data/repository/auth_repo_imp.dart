@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:real_estate/core/constants/api_urls.dart';
 import 'package:real_estate/features/auth/data/models/login_model.dart';
 import 'package:real_estate/features/auth/data/models/send_sode_model.dart';
 import 'package:real_estate/features/auth/data/models/signup_model.dart';
 import 'package:real_estate/features/auth/data/models/verify_code_model.dart';
 import 'package:real_estate/features/auth/data/source/auth_service.dart';
+import 'package:real_estate/features/auth/data/source/notification_apiservice.dart';
 import 'package:real_estate/features/auth/domain/repository/auth_repo.dart';
 import 'package:real_estate/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +34,8 @@ Future<Either<dynamic, dynamic>> signin(LoginModel loginReq) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
-     
+      await NotificationService.registerDeviceToken(ApiUrls.registerToken);
+      debugPrint("await NotificationS : ${ApiUrls.registerToken}");
     } catch (e) {
       print('SharedPreferences error: $e');
     }

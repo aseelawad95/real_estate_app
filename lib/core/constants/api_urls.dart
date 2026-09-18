@@ -1,5 +1,6 @@
 class ApiUrls {
   static const baseURL = 'https://aseelrealestate.runasp.net/api/';
+  static const registerToken = '${baseURL}DeviceToken/register';
   static const register = '${baseURL}Auth/register';
   static const userProfile = '${baseURL}users/profile';
   static const login = '${baseURL}Auth/login';

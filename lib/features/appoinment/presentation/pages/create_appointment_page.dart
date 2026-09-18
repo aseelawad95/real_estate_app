@@ -15,8 +15,12 @@ import 'package:real_estate/features/appoinment/presentation/widgets/appointment
 import 'package:real_estate/service_locator.dart';
 
 class CreateAppointmentPage extends StatefulWidget {
-  const CreateAppointmentPage({super.key, required this.propertyId});
+  const CreateAppointmentPage({super.key, required this.propertyId, required this.imageUrl, required this.title, required this.location, required this.price});
   final int propertyId;
+  final String imageUrl;
+  final String title;
+  final String location;
+  final double price;
 
   @override
   State<CreateAppointmentPage> createState() => _CreateAppointmentPageState();
@@ -55,8 +59,6 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
     setState(() => _selectedTimeSlot = slot);
   }
 
-  /// بيرجع أول وقت (hour, minute) من نطاق الـ TimeSlot المختار
-  /// (مثلاً Morning -> 09:00 AM)
   ({int hour, int minute}) _startTimeOf(TimeSlot slot) {
     switch (slot) {
       case TimeSlot.morning:
@@ -139,14 +141,14 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  const AppointmentPropertyImageHeader(
-                    imageUrl: 'https://example.com/obsidian-pavilion.jpg',
+                   AppointmentPropertyImageHeader(
+                    imageUrl: widget.imageUrl,
                   ),
                   const SizedBox(height: 16),
-                  const AppointmentPropertyInfoSection(
-                    title: 'The Obsidian Pavilion',
-                    location: '9 Bel Air, Los Angeles',
-                    price: '\$12,500,000',
+                   AppointmentPropertyInfoSection(
+                    title: widget.title,
+                    location : widget.location,
+                    price: widget.price,
                   ),
                   const SizedBox(height: 24),
                   AppointmentDateSelectionSection(

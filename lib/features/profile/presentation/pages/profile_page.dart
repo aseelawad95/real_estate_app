@@ -45,12 +45,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
 @override
   void initState() {
-   _loadUserId();
     super.initState();
+    _loadUserId();
   }
  Future<void> _loadUserId() async {
     final id = await TokenHelper.getUserId();
-
+     debugPrint("id :${id}");
     setState(() {
       userId = id;
       isLoading = false;
@@ -79,15 +79,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: AppColors.thirdColor,
       body: SafeArea(
-        child: ListView(
+        child: isLoading
+      ? const Center(child: CircularProgressIndicator()) : ListView(
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.md,
             vertical: Spacing.lg,
           ),
           children: [
             BlocProvider(
-              create: (_) => sl<GetUserbyIdCubit>()
-                                  ..getUserById(userId??""),
+             create: (_) => sl<GetUserbyIdCubit>()..getUserById(userId!),
               child: GetUserBlocBuilderBody(),
             ),
             const SizedBox(height: Spacing.lg),

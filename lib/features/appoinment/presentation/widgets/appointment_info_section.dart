@@ -12,7 +12,7 @@ class AppointmentPropertyInfoSection extends StatelessWidget {
 
   final String title;
   final String location;
-  final String price;
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class AppointmentPropertyInfoSection extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         CustomText(
-          text: price,
+          text: "\$${price.toString()}",
           fontSize: 16,
           fontWeight: FontWeight.w700,
           color: AppColors.primaryColor,

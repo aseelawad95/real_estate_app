@@ -163,7 +163,15 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     height: 50,
                     title: "Create Appointment",
                     onPressed: () {
-                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => CreateAppointmentPage(propertyId: property.id,)));
+                     Navigator.pushReplacement(context, 
+                     MaterialPageRoute(builder: (_) 
+                     => CreateAppointmentPage(propertyId:
+                      property.id,
+                      imageUrl: property.images[0],
+                      location: property.location!.country,
+                           price: property.price,
+                           title: property.title!,
+                      )));
                   },),
                   ],
                 ),
