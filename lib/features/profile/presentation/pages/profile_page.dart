@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
 import 'package:real_estate/core/helper_function/TokenHelper.dart';
+import 'package:real_estate/features/profile/data/models/user_model.dart';
+import 'package:real_estate/features/profile/presentation/bloc/editUser/edit_user_cubit.dart';
 import 'package:real_estate/features/profile/presentation/bloc/get_userby_id/get_userby_id_cubit.dart';
 import 'package:real_estate/features/profile/presentation/widgets/account_status_card.dart';
 import 'package:real_estate/features/profile/presentation/widgets/edit_profile_card.dart';
@@ -36,21 +38,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String? userId;
-  final _nameController = TextEditingController(text: 'Alex Harrison');
-  final _emailController = TextEditingController(
-    text: 'alex.harrison@example.com',
-  );
-   bool isLoading = true;
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  bool isLoading = true;
   bool _isAccountActive = true;
 
-@override
+  @override
   void initState() {
     super.initState();
     _loadUserId();
   }
- Future<void> _loadUserId() async {
+
+  Future<void> _loadUserId() async {
     final id = await TokenHelper.getUserId();
-     debugPrint("id :${id}");
+    debugPrint("id :$id");
     setState(() {
       userId = id;
       isLoading = false;
@@ -64,12 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  void _onUpdateProfile() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Profile updated')));
-  }
-
   void _onLogout() {
     // TODO: hook up to your auth/session logic.
   }
@@ -80,45 +75,89 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: AppColors.thirdColor,
       body: SafeArea(
         child: isLoading
-      ? const Center(child: CircularProgressIndicator()) : ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Spacing.md,
-            vertical: Spacing.lg,
-          ),
-          children: [
-            BlocProvider(
-             create: (_) => sl<GetUserbyIdCubit>()..getUserById(userId!),
-              child: GetUserBlocBuilderBody(),
-            ),
-            const SizedBox(height: Spacing.lg),
-            EditProfileCard(
-              nameController: _nameController,
-              emailController: _emailController,
-              onUpdate: _onUpdateProfile,
-            ),
-            const SizedBox(height: Spacing.md),
-            AccountStatusCard(
-              isActive: _isAccountActive,
-              onChanged: (value) => setState(() => _isAccountActive = value),
-            ),
-            const SizedBox(height: Spacing.md),
-            const MenuCard(
-              icon: Icons.location_on_outlined,
-              label: 'Saved Addresses',
-            ),
-            const SizedBox(height: Spacing.md),
-            const MenuCard(
-              icon: Icons.credit_card_outlined,
-              label: 'Payment Methods',
-            ),
-            const SizedBox(height: Spacing.md),
-            const MenuCard(icon: Icons.settings_outlined, label: 'Settings'),
-            const SizedBox(height: Spacing.md),
-            LogoutButton(onTap: _onLogout),
-          ],
-        ),
+            ? const Center(child: CircularProgressIndicator())
+            : MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (_) => sl<GetUserbyIdCubit>()..getUserById(userId!),
+                  ),
+                  BlocProvider(create: (_) => sl<EditUserCubit>()),
+                ],
+                child: MultiBlocListener(
+                  listeners: [
+                    BlocListener<GetUserbyIdCubit, GetUserbyIdState>(
+                      listener: (context, state) {
+                        if (state is GetUserByIdLoaded) {
+                          _nameController.text = state.user.userName;
+                          _emailController.text = state.user.email;
+                        }
+                      },
+                    ),
+                    BlocListener<EditUserCubit, EditUserState>(
+                      listener: (context, state) {
+                        if (state is EditUserSuccess) {
+                          context.read<GetUserbyIdCubit>().updateLocalUser(state.user.toEntity());
+
+                        }
+                      },
+                    ),
+                  ],
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Spacing.md,
+                      vertical: Spacing.lg,
+                    ),
+                    children: [
+                      const GetUserBlocBuilderBody(),
+                      const SizedBox(height: Spacing.lg),
+                      Builder(
+                        builder: (context) {
+                          return EditProfileCard(
+                            userId: userId!,
+                            nameController: _nameController,
+                            emailController: _emailController,
+                            onUpdate: () {
+                              context.read<EditUserCubit>().editUser(
+                                userId!,
+                                UserModel(
+                                  id: userId!,
+                                  userName: _nameController.text,
+                                  email: _emailController.text,
+                                  phoneNumber: "",
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: Spacing.md),
+                      AccountStatusCard(
+                        isActive: _isAccountActive,
+                        onChanged: (value) =>
+                            setState(() => _isAccountActive = value),
+                      ),
+                      const SizedBox(height: Spacing.md),
+                      const MenuCard(
+                        icon: Icons.location_on_outlined,
+                        label: 'Saved Addresses',
+                      ),
+                      const SizedBox(height: Spacing.md),
+                      const MenuCard(
+                        icon: Icons.credit_card_outlined,
+                        label: 'Payment Methods',
+                      ),
+                      const SizedBox(height: Spacing.md),
+                      const MenuCard(
+                        icon: Icons.settings_outlined,
+                        label: 'Settings',
+                      ),
+                      const SizedBox(height: Spacing.md),
+                      LogoutButton(onTap: _onLogout),
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }
 }
-

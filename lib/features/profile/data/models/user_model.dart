@@ -6,7 +6,7 @@ class UserModel {
   final String userName;
   final String email;
   final String phoneNumber;
-  final bool isBlocked;
+  final bool? isBlocked;
   final String? role;
   final String? city;
   final String? street;
@@ -16,7 +16,7 @@ class UserModel {
     required this.userName,
     required this.email,
     required this.phoneNumber,
-    required this.isBlocked,
+     this.isBlocked,
     this.role,
     this.city,
     this.street,
@@ -41,10 +41,22 @@ class UserModel {
       userName: userName,
       email: email,
       phoneNumber: phoneNumber,
-      isBlocked: isBlocked,
+      isBlocked: isBlocked ?? false,
       role: role ?? '',
       city: city,
       street: street ?? '',
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userName': userName,
+      'email': email,
+    'phoneNumber': phoneNumber,
+      'isBlocked': isBlocked,
+      'role': role,
+      'city': city,
+      'street': street,
+    };
   }
 }

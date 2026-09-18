@@ -18,5 +18,7 @@ class ApiUrls {
   static String propertyDetails(int id) => '${baseURL}Properties/$id';
    static const notifications = '${baseURL}Notifications';
   static const appointment = '${baseURL}Appointments';
+   static const editUser = '${baseURL}UserManagements/edit-user';
+  static String editUserByUserId(String userId) => '$editUser/$userId';
 
 }

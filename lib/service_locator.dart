@@ -32,7 +32,9 @@ import 'package:real_estate/features/notification/presentation/bloc/get_notifica
 import 'package:real_estate/features/profile/data/repository/profile_repo_impl.dart';
 import 'package:real_estate/features/profile/data/source/profile_api_service.dart';
 import 'package:real_estate/features/profile/domain/repository/profile_repo.dart';
+import 'package:real_estate/features/profile/domain/usecase/edit_user_usecase.dart';
 import 'package:real_estate/features/profile/domain/usecase/profile_usecase.dart';
+import 'package:real_estate/features/profile/presentation/bloc/editUser/edit_user_cubit.dart';
 import 'package:real_estate/features/profile/presentation/bloc/get_userby_id/get_userby_id_cubit.dart';
 import 'package:real_estate/features/property/data/repository/property_repo_imp.dart';
 import 'package:real_estate/features/property/data/source/property_api_service.dart';
@@ -52,6 +54,7 @@ import 'package:real_estate/features/propertyType/presentation/bloc/property_typ
 final sl = GetIt.instance;
 
 void setupServiceLocator() {
+
   sl.registerSingleton<DioClient>(DioClient());
 
   // Services
@@ -60,9 +63,9 @@ void setupServiceLocator() {
   sl.registerSingleton<PropertyApiService>(PropertyApiServiceImp());
   sl.registerSingleton<FavoriteApiService>(FavoriteApiServiceImp());
   sl.registerSingleton<LocationApiService>(LocationApiServiceImp());
-   sl.registerSingleton<ProfileApiService>(ProfileApiServiceImp());
-   sl.registerSingleton<AppointmentApiservice>(AppointmentApiserviceImpl());
-    sl.registerSingleton<NotificationApiService>(NotificationApiServiceImp());
+  sl.registerSingleton<ProfileApiService>(ProfileApiServiceImp());
+  sl.registerSingleton<AppointmentApiservice>(AppointmentApiserviceImpl());
+  sl.registerSingleton<NotificationApiService>(NotificationApiServiceImp());
 
 
 
@@ -96,7 +99,11 @@ void setupServiceLocator() {
   sl.registerLazySingleton<PropertyDetailsUseCase>(() => PropertyDetailsUseCase());
   sl.registerLazySingleton<CreateAppointmentUseCase>(() => CreateAppointmentUseCase());
   sl.registerLazySingleton<NotificationUseCase>(() => NotificationUseCase());
+  sl.registerLazySingleton<EditUserUseCase>(() => EditUserUseCase());
+
   
+
+
   // Cubits
   sl.registerFactory<PropertyTypeCubit>(() => PropertyTypeCubit(sl<PropertyTypeUseCase>()),);
    sl.registerFactory<GetpropertyCubit>(() => GetpropertyCubit(sl<PropertyUseCase>()),);
@@ -108,5 +115,5 @@ void setupServiceLocator() {
   sl.registerFactory<PropertyDetailsCubit>(() => PropertyDetailsCubit(sl<PropertyDetailsUseCase>()),);
    sl.registerFactory<CreateappointmentCubit>(() => CreateappointmentCubit(sl<CreateAppointmentUseCase>()),);
    sl.registerFactory<GetNotificationCubit>(() => GetNotificationCubit(sl<NotificationUseCase>()),);
-  
+  sl.registerFactory<EditUserCubit>(() => EditUserCubit(sl<EditUserUseCase>()),);
 }

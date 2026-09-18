@@ -2,6 +2,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:real_estate/core/errors/server_failure.dart';
+import 'package:real_estate/features/profile/data/models/user_model.dart';
 import 'package:real_estate/features/profile/data/source/profile_api_service.dart';
 import 'package:real_estate/features/profile/domain/entities/user.dart';
 import 'package:real_estate/features/profile/domain/repository/profile_repo.dart';
@@ -27,5 +28,8 @@ class  UserRepositoryImpl extends  ProfileRepository {
     );
   }
 
-
+@override
+  Future<Either<Failure, UserModel>> editUser(String userId, UserModel user) {
+    return profileApiService.editUser(userId, user);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:real_estate/features/profile/data/models/user_model.dart';
 import 'package:real_estate/features/profile/domain/entities/user.dart';
 import 'package:real_estate/features/profile/domain/usecase/profile_usecase.dart';
 
@@ -20,5 +21,9 @@ class GetUserbyIdCubit extends Cubit<GetUserbyIdState> {
       (failure) => emit(GetUserByIdError(failure.message.toString())),
       (user) => emit(GetUserByIdLoaded(user)),
     );
+  }
+
+  void updateLocalUser(User user) {
+    emit(GetUserByIdLoaded(user));
   }
 }
