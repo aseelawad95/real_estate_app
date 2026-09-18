@@ -130,49 +130,57 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                   
+
                     const SizedBox(height: AppSpacing.lg),
                     SectionTitle(title: 'Listing Owner'),
                     const SizedBox(height: AppSpacing.sm),
                     OwnerCard(owner: property.owner),
                     const SizedBox(height: AppSpacing.xl),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SectionTitle(title: 'Reviews'),
-                        CustomText(
-                          text: 'See All',
-                          color: AppColors.primaryColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    AllReviewsScreen(reviews: property.reviews),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                    if (property.reviews.isNotEmpty) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SectionTitle(title: 'Reviews'),
+                          CustomText(
+                            text: 'See All',
+                            color: AppColors.primaryColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AllReviewsScreen(
+                                    reviews: property.reviews,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: AppSpacing.sm),
+                      ...property.reviews.map((r) => ReviewCard(review: r)),
+                    ],
+                    BasicAppButton(
+                      height: 50,
+                      title: "Create Appointment",
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CreateAppointmentPage(
+                              propertyId: property.id,
+                              imageUrl: property.images[0],
+                              location: property.location!.country,
+                              price: property.price,
+                              title: property.title!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    ...property.reviews.map((r) => ReviewCard(review: r)),
-                  BasicAppButton(
-                    height: 50,
-                    title: "Create Appointment",
-                    onPressed: () {
-                     Navigator.pushReplacement(context, 
-                     MaterialPageRoute(builder: (_) 
-                     => CreateAppointmentPage(propertyId:
-                      property.id,
-                      imageUrl: property.images[0],
-                      location: property.location!.country,
-                           price: property.price,
-                           title: property.title!,
-                      )));
-                  },),
                   ],
                 ),
               ),

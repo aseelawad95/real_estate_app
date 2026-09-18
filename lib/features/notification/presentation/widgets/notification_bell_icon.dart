@@ -35,7 +35,7 @@ class NotificationBellIcon extends StatelessWidget {
                     const Icon(CupertinoIcons.bell, color: Colors.black),
                     if (unreadCount > 0)
                       Positioned(
-                        right: -6,
+                        right: -4,
                         top: -4,
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),

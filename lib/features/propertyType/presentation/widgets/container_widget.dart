@@ -4,71 +4,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
 import 'package:real_estate/features/propertyType/presentation/bloc/property_type_cubit.dart';
+import 'package:real_estate/features/propertyType/presentation/pages/property_type_details.dart';
 
-class ContainerWidget extends StatefulWidget {
-  const ContainerWidget({super.key,});
-  
-
-  @override
-  State<ContainerWidget> createState() => _ContainerWidgetState();
-}
-
-class _ContainerWidgetState extends State<ContainerWidget> {
-  int? selectedIndex;
+class ContainerWidget extends StatelessWidget {
+  const ContainerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PropertyTypeCubit, PropertyTypeState>(
       builder: (context, state) {
         if (state is PropertyTypeLoading) {
-          return const SizedBox(
-            height: 80,
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return const SizedBox(height: 80, child: Center(child: CircularProgressIndicator()));
         }
-
         if (state is PropertyTypeError) {
-          return SizedBox(
-            height: 80,
-            child: Center(
-              child: CustomText(
-                text: state.message,
-                color: Colors.red,
-              ),
-            ),
-          );
+          return SizedBox(height: 80, child: Center(child: CustomText(text: state.message, color: Colors.red)));
         }
-
         if (state is PropertyTypeLoaded) {
           final propertyType = state.propertyType;
-
           if (propertyType.isEmpty) {
-            return const SizedBox(
-              height: 80,
-              child: Center(child: Text("No Property Type found")),
-            );
+            return const SizedBox(height: 80, child: Center(child: Text("No Property Type found")));
           }
-
           return Align(
-            alignment: AlignmentGeometry.topLeft,
+            alignment: Alignment.topLeft,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(propertyType.length, (index) {
+                  final type = propertyType[index];
                   return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PropertyTypeDetailsPage(
+                            typeName: type.name,
+                            properties: type.properties!,
+                          ),
+                        ),
+                      );
                     },
                     child: ContainerData(
-                      color: selectedIndex == index
-                          ? AppColors.secondaryColor
-                          : Colors.white,
-                      icon: propertyType[index].icon,
-                      text: propertyType[index].name,
+                      color: Colors.white,
+                      icon: type.icon,
+                      text: type.name,
                     ),
                   );
                 }),
@@ -76,7 +54,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
             ),
           );
         }
-
         return const SizedBox.shrink();
       },
     );
@@ -99,14 +76,14 @@ class ContainerData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-              Container(
-                margin: EdgeInsets.all(6),
+        Container(
+          margin: const EdgeInsets.all(6),
           width: 64,
           height: 64,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.grayColor,width: 2),
+            border: Border.all(color: AppColors.grayColor, width: 2),
           ),
           child: Center(
             child: CachedNetworkImage(

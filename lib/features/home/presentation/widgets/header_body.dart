@@ -14,7 +14,10 @@ class HeaderBody extends StatelessWidget {
               children: [
                 Icon(CupertinoIcons.list_bullet,color: Colors.black,),
                 CustomText(text: "EstateGold",color: AppColors.primaryColor,fontWeight: FontWeight.bold,fontSize: 26,),
-                NotificationBellIcon()
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: NotificationBellIcon(),
+                )
               ],
             );
   }

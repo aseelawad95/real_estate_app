@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class AppColors{
-  static Color primaryColor = const Color(0xff031634);
+ static Color primaryColor = const Color(0xff031634);
   static Color secondaryColor = const Color(0xffFDCE6A);
   static Color thirdColor = const Color(0xffE5EEFF);
   static Color fourthColor = const Color(0xffFD933D);
@@ -12,8 +12,11 @@ class AppColors{
   static Color grayColor = const Color(0xffC5C6CF);
   static Color borderColor = const Color(0xff795900);
 
-   static Color dangerColor = const Color(0xffD64545);
+  static Color dangerColor = const Color(0xffD64545);
   static Color dangerBackground = const Color(0xffFCE8E8);
   static Color primaryText = const Color(0xff1A1F1E);
+
+  static Color dividerColor = const Color(0xffE9ECEF);
+  static Color verifiedBadgeColor = const Color(0xffF5A623);
 
 }

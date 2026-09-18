@@ -8,7 +8,12 @@ part 'toggle_favorite_state.dart';
 
 class ToggleFavoriteCubit extends Cubit<ToggleFavoriteState> {
   final ToggleFavoriteUseCase toggleFavoriteUseCase;
+
+  final Map<int, bool> _favoriteOverrides = {};
+
   ToggleFavoriteCubit(this.toggleFavoriteUseCase) : super(ToggleFavoriteInitial());
+
+  bool? isFavorited(int propertyId) => _favoriteOverrides[propertyId];
 
   Future<void> toggleFavorite(int propertyId, String userId) async {
     emit(ToggleFavoriteLoading(propertyId));
@@ -21,9 +26,10 @@ class ToggleFavoriteCubit extends Cubit<ToggleFavoriteState> {
       (failure) => emit(
         ToggleFavoriteError(propertyId: propertyId, message: failure.message),
       ),
-      (isFavorited) => emit(
-        ToggleFavoriteLoaded(propertyId: propertyId, isFavorited: isFavorited),
-      ),
+      (isFavorited) {
+        _favoriteOverrides[propertyId] = isFavorited; 
+        emit(ToggleFavoriteLoaded(propertyId: propertyId, isFavorited: isFavorited));
+      },
     );
   }
 }

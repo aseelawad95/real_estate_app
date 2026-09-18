@@ -13,8 +13,9 @@ class PropertyTypeLoading extends PropertyTypeState {}
 
 class PropertyTypeLoaded extends PropertyTypeState {
   final List<PropertyType> propertyType;
+  final int? selectedTypeId;
 
-  const PropertyTypeLoaded(this.propertyType);
+  const PropertyTypeLoaded(this.propertyType,{this.selectedTypeId});
 
   @override
   List<Object?> get props => [propertyType];

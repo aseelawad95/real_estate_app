@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
 import 'package:real_estate/core/helper_function/app_spacing.dart';
+import 'package:real_estate/features/message/presentation/pages/message_page.dart';
 import 'package:real_estate/features/property/domain/entities/owner.dart';
 import 'package:real_estate/features/property/presentation/widgets/circle_icon_button.dart';
 
@@ -19,11 +20,6 @@ class OwnerCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // CircleAvatar(
-          //   radius: 24,
-          //   backgroundColor: AppColors.grayColor,
-          //   backgroundImage: NetworkImage(owner.avatarUrl),
-          // ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
@@ -58,9 +54,9 @@ class OwnerCard extends StatelessWidget {
             ),
           ),
           CircleIconButton(
-            icon: Icons.call,
+            icon: Icons.message,
             onTap: () {
-              // TODO: اتصال بالوكيل العقاري
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MessagePage()));
             },
           ),
         ],

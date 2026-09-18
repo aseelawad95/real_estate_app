@@ -111,7 +111,7 @@ void setupServiceLocator() {
   sl.registerFactory<GetlocationCubit>(() => GetlocationCubit(sl<LocationUseCase>()),);
    sl.registerFactory<CreatepropertyCubit>(() => CreatepropertyCubit(sl<CreatePropertyUseCase>()),);
   sl.registerFactory<GetUserbyIdCubit>(() => GetUserbyIdCubit(sl<GetUserByIdUseCase>()),);
-  sl.registerFactory<ToggleFavoriteCubit>(() => ToggleFavoriteCubit(sl<ToggleFavoriteUseCase>()),);
+  sl.registerLazySingleton<ToggleFavoriteCubit>(() => ToggleFavoriteCubit(sl()));
   sl.registerFactory<PropertyDetailsCubit>(() => PropertyDetailsCubit(sl<PropertyDetailsUseCase>()),);
    sl.registerFactory<CreateappointmentCubit>(() => CreateappointmentCubit(sl<CreateAppointmentUseCase>()),);
    sl.registerFactory<GetNotificationCubit>(() => GetNotificationCubit(sl<NotificationUseCase>()),);

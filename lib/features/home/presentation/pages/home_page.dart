@@ -43,7 +43,20 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
-                        CustomText(text: "See all",color: AppColors.secondaryText,),
+                         GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (_) => BlocProvider.value(
+                            //       value: context.read<PropertyTypeCubit>(),
+                            //       child: const AllPropertyTypesPage(),
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                          child: CustomText(text: "See all", color: AppColors.secondaryText),
+                        ),
                       ],
                     ),
                     SizedBox(height: context.h(10)),

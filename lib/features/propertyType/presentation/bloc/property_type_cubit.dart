@@ -23,4 +23,12 @@ class PropertyTypeCubit extends Cubit<PropertyTypeState> {
       (propertyType) => emit(PropertyTypeLoaded(propertyType)),
     );
   }
+
+  void selectPropertyType(int? id) {
+    final current = state;
+    if (current is PropertyTypeLoaded) {
+      final newId = current.selectedTypeId == id ? null : id;
+      emit(PropertyTypeLoaded(current.propertyType, selectedTypeId: newId));
+    }
+  }
 }
