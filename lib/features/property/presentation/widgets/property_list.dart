@@ -118,7 +118,7 @@ class _PropertyListView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => PropertyDetailsScreen(property: propertyDetails),
+            builder: (_) => PropertyDetailsPage(property: propertyDetails),
           ),
         );
       case PropertyDetailsError(:final message):

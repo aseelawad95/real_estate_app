@@ -24,6 +24,14 @@ import 'package:real_estate/features/location/data/source/location_apiservice.da
 import 'package:real_estate/features/location/domain/repository/location_repo.dart';
 import 'package:real_estate/features/location/domain/usecase/location_usecase.dart';
 import 'package:real_estate/features/location/presentation/bloc/getlocation/getlocation_cubit.dart';
+import 'package:real_estate/features/message/data/repository/message_repo_imp.dart';
+import 'package:real_estate/features/message/data/source/message_api_service.dart';
+import 'package:real_estate/features/message/domain/repository/message_repo.dart';
+import 'package:real_estate/features/message/domain/usecase/find_conversation_usecase.dart';
+import 'package:real_estate/features/message/domain/usecase/get_conversation_message.dart';
+import 'package:real_estate/features/message/domain/usecase/get_conversation_usecase.dart';
+import 'package:real_estate/features/message/domain/usecase/mark_read_usecase.dart';
+import 'package:real_estate/features/message/domain/usecase/send_message_usecase.dart';
 import 'package:real_estate/features/notification/data/repository/notification_repo_impl.dart';
 import 'package:real_estate/features/notification/data/source/notification_apiservice.dart';
 import 'package:real_estate/features/notification/domain/repository/notification_repo.dart';
@@ -66,6 +74,7 @@ void setupServiceLocator() {
   sl.registerSingleton<ProfileApiService>(ProfileApiServiceImp());
   sl.registerSingleton<AppointmentApiservice>(AppointmentApiserviceImpl());
   sl.registerSingleton<NotificationApiService>(NotificationApiServiceImp());
+  sl.registerLazySingleton<MessageApiService>(() => MessageApiServiceImpl());
 
 
 
@@ -80,7 +89,7 @@ void setupServiceLocator() {
   sl.registerSingleton<ProfileRepository>(UserRepositoryImpl(sl<ProfileApiService>()));
   sl.registerSingleton<AppointmentRepo>(AppointmentRepoImpl(sl<AppointmentApiservice>()));
     sl.registerSingleton<NotificationRepository>(NotificationRepositoryImpl(sl<NotificationApiService>()));
-
+  sl.registerLazySingleton<MessageRepository>(() => MessageRepositoryImpl(sl<MessageApiService>()));
 
 
 
@@ -100,7 +109,12 @@ void setupServiceLocator() {
   sl.registerLazySingleton<CreateAppointmentUseCase>(() => CreateAppointmentUseCase());
   sl.registerLazySingleton<NotificationUseCase>(() => NotificationUseCase());
   sl.registerLazySingleton<EditUserUseCase>(() => EditUserUseCase());
-
+  sl.registerLazySingleton<SendMessageUseCase>(() => SendMessageUseCase());
+    sl.registerLazySingleton<GetConversationsUseCase>(() => GetConversationsUseCase());
+    sl.registerLazySingleton<GetConversationMessagesUseCase>(() => GetConversationMessagesUseCase());
+    sl.registerLazySingleton<MarkAsReadUseCase>(() => MarkAsReadUseCase());
+     sl.registerLazySingleton<FindConversationIdUseCase>(() => FindConversationIdUseCase());
+    
   
 
 

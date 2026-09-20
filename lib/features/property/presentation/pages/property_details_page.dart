@@ -17,16 +17,16 @@ import 'package:real_estate/features/property/presentation/widgets/section_title
 import 'package:real_estate/features/property/presentation/widgets/stats_row.dart';
 import 'package:real_estate/features/property/presentation/widgets/title_and_price_section.dart';
 
-class PropertyDetailsScreen extends StatefulWidget {
-  const PropertyDetailsScreen({super.key, required this.property});
+class PropertyDetailsPage extends StatefulWidget {
+  const PropertyDetailsPage({super.key, required this.property});
 
   final PropertyDetails property;
 
   @override
-  State<PropertyDetailsScreen> createState() => _PropertyDetailsScreenState();
+  State<PropertyDetailsPage> createState() => _PropertyDetailsPageState();
 }
 
-class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
+class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   final PageController _pageController = PageController();
   int _currentImage = 0;
   bool _isFavorite = false;
@@ -134,7 +134,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     const SizedBox(height: AppSpacing.lg),
                     SectionTitle(title: 'Listing Owner'),
                     const SizedBox(height: AppSpacing.sm),
-                    OwnerCard(owner: property.owner),
+                    OwnerCard(owner: property.owner,propertyId: property.id,),
                     const SizedBox(height: AppSpacing.xl),
                     if (property.reviews.isNotEmpty) ...[
                       Row(

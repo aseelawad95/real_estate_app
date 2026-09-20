@@ -1,16 +1,18 @@
 import 'package:real_estate/features/property/domain/entities/owner.dart';
 
 class OwnerModel {
+  final String? ownerId;
   final String name;
   final String? phone;
 
   OwnerModel({
     required this.name,
-    this.phone,
+    this.phone, this.ownerId,
   });
 
   factory OwnerModel.fromJson(Map<String, dynamic> json) {
     return OwnerModel(
+      ownerId : json['ownerId'],
       name: json['ownerName'] ?? '',
       phone: json['ownerPhone'],
     );
@@ -20,6 +22,7 @@ class OwnerModel {
     return {
       'ownerName': name,
       'ownerPhone': phone,
+      'ownerId' :ownerId
     };
   }
 
@@ -27,6 +30,7 @@ class OwnerModel {
     return Owner(
       name: name,
       phone: phone,
+      ownerId: ownerId
     );
   }
 }

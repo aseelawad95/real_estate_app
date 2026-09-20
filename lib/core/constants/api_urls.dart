@@ -21,4 +21,11 @@ class ApiUrls {
    static const editUser = '${baseURL}UserManagements/edit-user';
   static String editUserByUserId(String userId) => '$editUser/$userId';
 
+  static const String sendMessage = '${baseURL}Messages';
+static const String conversations = '${baseURL}Messages/conversations';
+static String conversationMessages(int conversationId) =>
+    '${baseURL}Messages/conversations/$conversationId';
+static String markAsRead(int conversationId) =>
+    '${baseURL}Messages/conversations/$conversationId/read';
+
 }

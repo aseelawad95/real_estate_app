@@ -75,16 +75,16 @@ class TitleAndPriceSection extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w800,
             ),
-            const SizedBox(width: 6),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: CustomText(
-                text: 'Est. \$${_formatCompact(property.price)}/mo',
-                color: AppColors.grayColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            // const SizedBox(width: 6),
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 3),
+            //   child: CustomText(
+            //     text: '\$${_formatCompact(property.price)}',
+            //     color: AppColors.grayColor,
+            //     fontSize: 12,
+            //     fontWeight: FontWeight.w500,
+            //   ),
+            // ),
           ],
         ),
       ],

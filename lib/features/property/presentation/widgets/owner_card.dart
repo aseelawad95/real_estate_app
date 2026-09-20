@@ -7,8 +7,9 @@ import 'package:real_estate/features/property/domain/entities/owner.dart';
 import 'package:real_estate/features/property/presentation/widgets/circle_icon_button.dart';
 
 class OwnerCard extends StatelessWidget {
-  const OwnerCard({super.key, required this.owner});
+  const OwnerCard({super.key, required this.owner, required this.propertyId});
   final Owner owner;
+  final int propertyId;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,12 @@ class OwnerCard extends StatelessWidget {
           CircleIconButton(
             icon: Icons.message,
             onTap: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MessagePage()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MessagePage(
+                receiverId: owner.ownerId!,
+              ownerName: owner.name,
+              propertyId:3,
+              conversationId:null ,
+              )));
             },
           ),
         ],
