@@ -7,24 +7,28 @@ import 'package:real_estate/core/network/dio_client.dart';
 import 'package:real_estate/features/property/data/models/property_details_model.dart';
 import 'package:real_estate/features/property/data/models/property_model.dart';
 import 'package:real_estate/features/property/domain/entities/create_property.dart';
+import 'package:real_estate/features/search/domain/entities/property_filter.dart';
 import 'package:real_estate/service_locator.dart';
 
 
 abstract class PropertyApiService {
-Future<Either<Failure, List<PropertyModel>>> getAllProperties();
+ Future<Either<Failure, List<PropertyModel>>> getAllProperties({PropertyFilterParams? filter,});
 Future<Either<Failure, PropertyModel>> createProperty(CreatePropertyParams property);
 Future<Either<Failure, PropertyDetailsModel>> getPropertyDetails(int id);
 }
 
 class PropertyApiServiceImp extends PropertyApiService{
   @override
-  Future<Either<Failure, List<PropertyModel>>> getAllProperties() async {
-   try {
-      final response = await sl<DioClient>().get(ApiUrls.property);
+  Future<Either<Failure, List<PropertyModel>>> getAllProperties({PropertyFilterParams? filter,}) async {
+    try {
+      final response = await sl<DioClient>().get(
+        ApiUrls.property,
+        queryParameters: filter?.toQueryParameters(),
+      );
 
-     final List<PropertyModel> properties = (response.data['data'] as List)
-    .map((json) => PropertyModel.fromJson(json))
-    .toList();
+      final List<PropertyModel> properties = (response.data['data'] as List)
+          .map((json) => PropertyModel.fromJson(json))
+          .toList();
 
       return Right(properties);
     } on DioException catch (e) {
@@ -32,9 +36,7 @@ class PropertyApiServiceImp extends PropertyApiService{
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
-  
   }
-
   @override
   Future<Either<Failure, PropertyModel>> createProperty(CreatePropertyParams property) async {
    try {

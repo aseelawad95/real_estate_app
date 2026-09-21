@@ -120,7 +120,7 @@ class PropertyCard extends StatelessWidget {
             left: 16,
             bottom: 14,
             child: Text(
-              price.toString(),
+              "\$${price.toString()}",
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

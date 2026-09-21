@@ -11,36 +11,55 @@ import 'package:real_estate/service_locator.dart';
 
 /// Renders a list of properties.
 ///
-/// If [properties] is provided, it renders that fixed list directly
-/// (used by screens like "properties by type" that already have the data).
-/// If [properties] is null, it listens to [GetpropertyCubit] and renders
-/// whatever that cubit's current state holds (used by the main feed).
+/// [shrinkWrap]/[physics] control how the internal ListView behaves:
+/// - When this widget is embedded inside another scrollable (e.g. Home's
+///   CustomScrollView), pass shrinkWrap: true + NeverScrollableScrollPhysics
+///   so the OUTER scrollable is the only one that scrolls.
+/// - When this widget IS the whole screen's scrollable (e.g. the dedicated
+///   search page), pass shrinkWrap: false + a normal scrollable physics so
+///   it can lazily build items and actually scroll on its own.
 class PropertyListPage extends StatelessWidget {
-  const PropertyListPage({super.key, this.properties});
+  const PropertyListPage({
+    super.key,
+    this.properties,
+    this.shrinkWrap = true,
+    this.physics = const NeverScrollableScrollPhysics(),
+  });
 
   final List<Property>? properties;
+  final bool shrinkWrap;
+  final ScrollPhysics physics;
 
   @override
   Widget build(BuildContext context) {
     if (properties != null) {
-      return _PropertyListView(properties: properties!);
+      return _PropertyListView(
+        properties: properties!,
+        shrinkWrap: shrinkWrap,
+        physics: physics,
+      );
     }
 
     return BlocListener<GetpropertyCubit, GetpropertyState>(
       listener: (context, state) {
         if (state is GetpropertyError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: BlocBuilder<GetpropertyCubit, GetpropertyState>(
         builder: (context, state) {
           return switch (state) {
-            GetpropertyLoading() =>
-              const Center(child: CircularProgressIndicator()),
+            GetpropertyLoading() => const Center(
+              child: CircularProgressIndicator(),
+            ),
             GetpropertyError(:final message) => Center(child: Text(message)),
-            GetpropertyLoaded(:final property) =>
-              _PropertyListView(properties: property),
+            GetpropertyLoaded(:final property) => _PropertyListView(
+              properties: property,
+              shrinkWrap: shrinkWrap,
+              physics: physics,
+            ),
             _ => const SizedBox.shrink(),
           };
         },
@@ -49,15 +68,16 @@ class PropertyListPage extends StatelessWidget {
   }
 }
 
-/// The actual scrollable list + its shared cubits.
-///
-/// Both [ToggleFavoriteCubit] and [PropertyDetailsCubit] are provided once
-/// for the whole list rather than once per card — there's no reason for
-/// each item to carry its own [PropertyDetailsCubit] instance.
 class _PropertyListView extends StatelessWidget {
-  const _PropertyListView({required this.properties});
+  const _PropertyListView({
+    required this.properties,
+    required this.shrinkWrap,
+    required this.physics,
+  });
 
   final List<Property> properties;
+  final bool shrinkWrap;
+  final ScrollPhysics physics;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +93,18 @@ class _PropertyListView extends StatelessWidget {
       child: BlocListener<PropertyDetailsCubit, PropertyDetailsState>(
         listener: _handlePropertyDetailsState,
         child: ListView.separated(
-          padding: EdgeInsets.only(bottom: 16),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 16),
+          shrinkWrap: shrinkWrap,
+          physics: physics,
           itemCount: properties.length,
           separatorBuilder: (_, __) => const SizedBox(height: 16),
           itemBuilder: (context, index) {
             final property = properties[index];
+            final favCubit = sl<ToggleFavoriteCubit>();
+            debugPrint(
+              'FAV DEBUG -> id: ${property.id} | api: ${property.isFavourite} | '
+              'override: ${favCubit.isFavorited(property.id)} | closed: ${favCubit.isClosed}',
+            );
             return PropertyCard(
               key: ValueKey(property.id),
               id: property.id,
@@ -92,9 +117,9 @@ class _PropertyListView extends StatelessWidget {
               listingType: property.location?.city ?? property.listingType,
               isVerified: true,
               initialIsFavorite: property.isFavourite,
-              onTap: () => context
-                  .read<PropertyDetailsCubit>()
-                  .propertyDetails(property.id),
+              onTap: () => context.read<PropertyDetailsCubit>().propertyDetails(
+                property.id,
+              ),
             );
           },
         ),
@@ -123,8 +148,9 @@ class _PropertyListView extends StatelessWidget {
         );
       case PropertyDetailsError(:final message):
         Navigator.pop(context);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
       default:
         break;
     }

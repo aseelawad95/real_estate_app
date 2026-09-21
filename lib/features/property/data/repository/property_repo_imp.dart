@@ -5,6 +5,7 @@ import 'package:real_estate/features/property/domain/entities/create_property.da
 import 'package:real_estate/features/property/domain/entities/property.dart';
 import 'package:real_estate/features/property/domain/entities/property_details.dart';
 import 'package:real_estate/features/property/domain/repository/property_repo.dart';
+import 'package:real_estate/features/search/domain/entities/property_filter.dart';
 
 
 
@@ -13,15 +14,13 @@ class  PropertyRepositoryImpl extends  PropertyRepository {
     PropertyRepositoryImpl(this.propertyApiService);
 
   @override
-  Future<Either<Failure, List<Property>>> getAllProperties() async {
-     final result = await propertyApiService.getAllProperties();
-  
-   return result.fold(
+  Future<Either<Failure, List<Property>>> getAllProperties({
+    PropertyFilterParams? filter,
+  }) async {
+    final result = await propertyApiService.getAllProperties(filter: filter);
+    return result.fold(
       (failure) => Left(failure),
-      (propertyModels) {
-        final properties = propertyModels.map((model) => model.toEntity()).toList();
-        return Right(properties); 
-      },
+      (models) => Right(models.map((m) => m.toEntity()).toList()),
     );
   }
 

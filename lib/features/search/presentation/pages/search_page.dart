@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
-import 'package:real_estate/core/constants/app_colors.dart';
 import 'package:real_estate/features/property/presentation/bloc/getproperty/getproperty_cubit.dart';
 import 'package:real_estate/features/search/presentation/widgets/listing_type.dart';
 import 'package:real_estate/service_locator.dart';
