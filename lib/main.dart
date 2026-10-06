@@ -42,3 +42,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+// flutter run --profile

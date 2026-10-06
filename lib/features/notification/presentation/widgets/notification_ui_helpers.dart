@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
 
-// type=0 مبني على المثال يلي عطيتني (تأكيد حجز موعد).
-// وسع الـ switch لما تجيبلي باقي قيم الـ enum من الباك.
 IconData notificationTypeIcon(int type) {
   switch (type) {
     case 0:

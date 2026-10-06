@@ -1,4 +1,3 @@
-// lib/features/search/presentation/pages/property_search_page.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

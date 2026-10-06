@@ -8,6 +8,6 @@ import 'package:real_estate/service_locator.dart';
 class ToggleFavoriteUseCase implements UseCase<Either<Failure, bool>, ToggleFavoriteParams> {
   @override
   Future<Either<Failure, bool>> call({ToggleFavoriteParams? param}) async {
-    return sl<FavoriteRepository>().toggleFavorite(param!.id, param!.userId);
+    return sl<FavoriteRepository>().toggleFavorite(param!.id, param.userId);
   }
 }

@@ -84,9 +84,10 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               IconButton(
-                            icon: const Icon(Icons.filter_list),
-                            onPressed: () => showPropertyFilterSheet(context),
-                          ),
+                                icon: const Icon(Icons.filter_list),
+                                onPressed: () =>
+                                    showPropertyFilterSheet(context),
+                              ),
                             ],
                           ),
                           SizedBox(height: context.h(20)),
@@ -131,10 +132,12 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           SizedBox(height: context.h(10)),
-                          const PropertyListPage(),
                         ],
                       ),
                     ),
+                    // Real sliver — only builds/lays out/paints the cards
+                    // near the viewport instead of the whole list at once.
+                    const PropertyListPage(asSliver: true),
                   ],
                 ),
               ),

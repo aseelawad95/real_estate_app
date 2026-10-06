@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:real_estate/features/profile/data/models/user_model.dart';
 import 'package:real_estate/features/profile/domain/entities/user.dart';
 import 'package:real_estate/features/profile/domain/usecase/profile_usecase.dart';
 

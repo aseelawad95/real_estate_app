@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
@@ -45,7 +46,7 @@ class PropertyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImageSection(),
+            _buildImageSection(context),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
               child: Column(
@@ -73,17 +74,37 @@ class PropertyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImageSection() {
+  Widget _buildImageSection(BuildContext context) {
+   
+    final screenWidth = MediaQuery.of(context).size.width;
+    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final cardWidth = screenWidth - 40; 
+    final cacheWidth = (cardWidth * devicePixelRatio).round();
+    final cacheHeight = (cacheWidth * 10 / 16).round(); 
+
     return AspectRatio(
       aspectRatio: 16 / 10,
       child: Stack(
         fit: StackFit.expand,
         children: [
           imageUrl.isNotEmpty
-              ? Image.network(
-                  imageUrl,
+              ? CachedNetworkImage(
+                  imageUrl: imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  memCacheWidth: cacheWidth,
+                  memCacheHeight: cacheHeight,
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  placeholder: (context, url) => Container(
+                    color: AppColors.dividerColor,
+                    child: const Center(
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
                     color: AppColors.dividerColor,
                     child: const Icon(Icons.broken_image, size: 32),
                   ),

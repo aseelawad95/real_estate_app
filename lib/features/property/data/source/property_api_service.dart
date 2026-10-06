@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -65,16 +67,34 @@ class PropertyApiServiceImp extends PropertyApiService{
       }
     }
 
+    debugPrint("===== IMAGES DEBUG =====");
+    debugPrint("property.images == null? ${property.images == null}");
+    debugPrint("property.images: ${property.images}");
+
     if (property.images != null && property.images!.isNotEmpty) {
       for (final path in property.images!) {
+        final file = File(path);
+        final exists = file.existsSync();
+        final size = exists ? file.lengthSync() : -1;
+        debugPrint("Image path: $path | exists: $exists | size: $size bytes");
+
+        if (!exists) {
+          debugPrint("⚠️ WARNING: file does not exist at this path");
+        }
+
         formData.files.add(MapEntry(
           'Images',
           await MultipartFile.fromFile(path, filename: path.split('/').last),
         ));
       }
+    } else {
+      debugPrint("⚠️ No images to add — property.images is null or empty");
     }
 
     debugPrint("FormData fields: ${formData.fields}");
+    debugPrint("FormData files count: ${formData.files.length}");
+    debugPrint("FormData files: ${formData.files.map((f) => '${f.key}: filename=${f.value.filename}, length=${f.value.length}').toList()}");
+    debugPrint("===== END IMAGES DEBUG =====");
 
     final response = await sl<DioClient>().post(ApiUrls.property, data: formData);
     final PropertyModel properties = PropertyModel.fromJson(response.data['data']);
@@ -99,6 +119,7 @@ class PropertyApiServiceImp extends PropertyApiService{
     return Left(ServerFailure(e.toString()));
   }
 }
+
 
  @override
 Future<Either<Failure, PropertyDetailsModel>> getPropertyDetails(int id) async {

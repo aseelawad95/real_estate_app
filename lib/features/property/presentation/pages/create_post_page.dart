@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/button/button_cubit.dart';
 import 'package:real_estate/common/widgets/basic_app_button.dart';
+import 'package:real_estate/common/widgets/custom_dropdown_textdield.dart';
 import 'package:real_estate/common/widgets/custom_image_picker.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
 import 'package:real_estate/common/widgets/custom_textfield.dart';
@@ -19,7 +20,6 @@ import 'package:real_estate/features/property/presentation/widgets/property_type
 import 'package:real_estate/features/propertyType/domain/entities/property_type.dart';
 import 'package:real_estate/features/propertyType/presentation/bloc/property_type_cubit.dart';
 import 'package:real_estate/service_locator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePostPage extends StatefulWidget {
   const CreatePostPage({super.key});
@@ -92,7 +92,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
     context.read<ButtonCubit>().excute(
       usecase: sl<CreatePropertyUseCase>(),
       params: CreatePropertyParams(
-        ownerId: "dd1e8846-8f5b-4837-9901-f5e682a78e0c",
+        ownerId: "04bd14dc-3217-447b-8d08-3e01edbfaf7f",
         translations: [
         TranslationParam(
           language: "ar",
@@ -205,6 +205,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     icon: CupertinoIcons.phone,
                   ),
                   SizedBox(height: context.h(10)),
+                  
+                  CustomDropDownTextField(
+                    hintText: "Listing Type",
+                    icon: CupertinoIcons.keyboard,
+                    items: ["Rent","Sale"],
+                  onChanged: (value) {
+                    
+                  },
+                  ),
                   BlocProvider(
                     key: _propertyTypeKey, 
                     create: (_) => sl<PropertyTypeCubit>()..getAllPropertyTypes(),

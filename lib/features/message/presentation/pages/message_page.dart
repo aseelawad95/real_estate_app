@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 
 // lib/features/messages/presentation/screens/chat_screen.dart
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
@@ -61,6 +60,7 @@ class _MessagePageState extends State<MessagePage> {
       receiverId: widget.receiverId,
       conversationId: widget.conversationId,
     )..loadMessages();
+    
   }
 
   @override
@@ -164,8 +164,12 @@ class _MessagePageState extends State<MessagePage> {
                     controller: _scrollController,
                     padding: const EdgeInsets.all(12),
                     itemCount: messages.length,
-                    itemBuilder: (context, index) =>
-                        _MessageBubble(message: messages[index],),
+                    itemBuilder: (context, index) {
+                       final message = messages[index];
+                       final isMine = message.senderId.toString() != widget.receiverId;
+                       return  _MessageBubble(message: message,isMine: isMine,);
+                    }
+                       
                   );
                 },
               ),
@@ -183,14 +187,17 @@ class _MessagePageState extends State<MessagePage> {
 
 class _MessageBubble extends StatelessWidget {
   final MessageEntity message;
+  final bool isMine;
 
-  const _MessageBubble({required this.message});
+  const _MessageBubble({
+    required this.message,
+    required this.isMine,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     return Align(
-      alignment:  Alignment.centerLeft,
+      alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -198,12 +205,17 @@ class _MessageBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          color:  AppColors.secondaryColor ,
-          borderRadius: BorderRadius.circular(14),
+          color: isMine ? AppColors.primaryColor : AppColors.secondaryColor,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(14),
+            topRight: const Radius.circular(14),
+            bottomLeft: Radius.circular(isMine ? 14 : 4),
+            bottomRight: Radius.circular(isMine ? 4 : 14),
+          ),
         ),
         child: CustomText(
           text: message.content,
-          color:AppColors.primaryText ,
+          color: isMine ? Colors.white : AppColors.primaryText,
           fontSize: 14,
           fontWeight: FontWeight.normal,
         ),

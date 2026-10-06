@@ -2,6 +2,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:real_estate/core/constants/api_urls.dart';
 import 'package:real_estate/core/errors/server_failure.dart';
 import 'package:real_estate/core/network/dio_client.dart';
@@ -32,10 +33,11 @@ class MessageApiServiceImpl extends MessageApiService {
         data: request.toJson(),
       );
       final data = response.data as Map<String, dynamic>;
+      
       return Right(MessageModel.fromJson(data));
     } on DioException catch (e) {
       print('STATUS: ${e.response?.statusCode}');
-      print('BODY: ${e.response?.data}'); // هون السبب
+      print('BODY: ${e.response?.data}'); 
       print('SENT: ${e.requestOptions.data}');
       return Left(_mapDioError(e));
     } catch (e) {
@@ -48,6 +50,7 @@ class MessageApiServiceImpl extends MessageApiService {
     try {
       final response = await sl<DioClient>().get(ApiUrls.conversations);
       final data = response.data as List<dynamic>;
+      debugPrint("data getConversations ${data}");
       final conversations = data
           .map((e) => ConversationModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -68,6 +71,7 @@ class MessageApiServiceImpl extends MessageApiService {
         ApiUrls.conversationMessages(conversationId),
       );
       final data = response.data as List<dynamic>;
+       debugPrint("data getConversationMessages ${data}");
       final messages = data
           .map((e) => MessageModel.fromJson(e as Map<String, dynamic>))
           .toList();

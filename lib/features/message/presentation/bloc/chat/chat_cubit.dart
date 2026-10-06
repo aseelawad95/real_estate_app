@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:real_estate/features/message/domain/entities/find_conversation.dart';
 import 'package:real_estate/features/message/domain/entities/message_entity.dart';
 import 'package:real_estate/features/message/domain/entities/send_message.dart';
@@ -32,45 +33,51 @@ class ChatCubit extends Cubit<ChatState> {
         super(ChatInitial());
 
   Future<void> loadMessages() async {
-    emit(ChatLoading());
+  emit(ChatLoading());
 
-    // ما إلنا id: نسأل السيرفر إذا في محادثة موجودة على هاد العقار مع هاد الشخص
-    if (_conversationId == null) {
-      final found = await findConversationIdUseCase.call(
-        param: FindConversationParams(
-          propertyId: propertyId,
-          otherUserId: receiverId,
-        ),
-      );
+  if (_conversationId == null) {
+    final found = await findConversationIdUseCase.call(
+      param: FindConversationParams(
+        propertyId: propertyId,
+        otherUserId: receiverId,
+      ),
+    );
 
-      String? error;
-      found.fold(
-        (failure) => error = failure.message.toString(),
-        (id) => _conversationId = id,
-      );
+    String? error;
+    found.fold(
+      (failure) => error = failure.message.toString(),
+      (id) => _conversationId = id,
+    );
 
-      if (error != null) {
-        emit(ChatError(error!));
-        return;
-      }
-
-      // ما في محادثة لسا: شاشة فاضية بتنتظر أول رسالة
-      if (_conversationId == null) {
-        emit(const ChatLoaded(messages: []));
-        return;
-      }
+    if (error != null) {
+      emit(ChatError(error!));
+      return;
     }
 
-    final result = await getMessagesUseCase.call(param: _conversationId);
-
-    await result.fold(
-      (failure) async => emit(ChatError(failure.message.toString())),
-      (messages) async {
-        emit(ChatLoaded(messages: messages));
-        await markAsReadUseCase.call(param: _conversationId);
-      },
-    );
+    if (_conversationId == null) {
+      debugPrint(
+        '[Chat] propertyId=$propertyId receiverId=$receiverId conversationId=null (no conversation yet)',
+      );
+      emit(const ChatLoaded(messages: []));
+      return;
+    }
   }
+
+  debugPrint(
+    '[Chat] propertyId=$propertyId receiverId=$receiverId conversationId=$_conversationId',
+  );
+
+  final result = await getMessagesUseCase.call(param: _conversationId);
+
+  await result.fold(
+    (failure) async => emit(ChatError(failure.message.toString())),
+    (messages) async {
+      debugPrint('[Chat] loaded ${messages.length} messages');
+      emit(ChatLoaded(messages: messages));
+      await markAsReadUseCase.call(param: _conversationId);
+    },
+  );
+}
 
   Future<void> sendMessage({
     required String content,

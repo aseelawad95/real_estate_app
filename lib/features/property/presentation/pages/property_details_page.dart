@@ -45,7 +45,6 @@ class _PropertyDetailsPageState extends State<PropertyDetailsPage> {
   Widget build(BuildContext context) {
     final property = widget.property;
 
-    // .value: ما بيسكّر الـ singleton لما تطلع من الصفحة
     return BlocProvider.value(
       value: sl<ToggleFavoriteCubit>(),
       child: Scaffold(

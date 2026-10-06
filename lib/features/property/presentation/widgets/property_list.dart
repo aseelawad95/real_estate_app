@@ -9,24 +9,17 @@ import 'package:real_estate/features/property/presentation/pages/property_detail
 import 'package:real_estate/features/property/presentation/widgets/property_card.dart';
 import 'package:real_estate/service_locator.dart';
 
-/// Renders a list of properties.
-///
-/// [shrinkWrap]/[physics] control how the internal ListView behaves:
-/// - When this widget is embedded inside another scrollable (e.g. Home's
-///   CustomScrollView), pass shrinkWrap: true + NeverScrollableScrollPhysics
-///   so the OUTER scrollable is the only one that scrolls.
-/// - When this widget IS the whole screen's scrollable (e.g. the dedicated
-///   search page), pass shrinkWrap: false + a normal scrollable physics so
-///   it can lazily build items and actually scroll on its own.
 class PropertyListPage extends StatelessWidget {
   const PropertyListPage({
     super.key,
     this.properties,
+    this.asSliver = false,
     this.shrinkWrap = true,
     this.physics = const NeverScrollableScrollPhysics(),
   });
 
   final List<Property>? properties;
+  final bool asSliver;
   final bool shrinkWrap;
   final ScrollPhysics physics;
 
@@ -35,6 +28,7 @@ class PropertyListPage extends StatelessWidget {
     if (properties != null) {
       return _PropertyListView(
         properties: properties!,
+        asSliver: asSliver,
         shrinkWrap: shrinkWrap,
         physics: physics,
       );
@@ -51,38 +45,47 @@ class PropertyListPage extends StatelessWidget {
       child: BlocBuilder<GetpropertyCubit, GetpropertyState>(
         builder: (context, state) {
           return switch (state) {
-            GetpropertyLoading() => const Center(
-              child: CircularProgressIndicator(),
+            GetpropertyLoading() => _wrap(
+              const Center(child: CircularProgressIndicator()),
             ),
-            GetpropertyError(:final message) => Center(child: Text(message)),
+            GetpropertyError(:final message) => _wrap(
+              Center(child: Text(message)),
+            ),
             GetpropertyLoaded(:final property) => _PropertyListView(
               properties: property,
+              asSliver: asSliver,
               shrinkWrap: shrinkWrap,
               physics: physics,
             ),
-            _ => const SizedBox.shrink(),
+            _ => _wrap(const SizedBox.shrink()),
           };
         },
       ),
     );
   }
+
+  Widget _wrap(Widget child) =>
+      asSliver ? SliverToBoxAdapter(child: child) : child;
 }
 
 class _PropertyListView extends StatelessWidget {
   const _PropertyListView({
     required this.properties,
+    required this.asSliver,
     required this.shrinkWrap,
     required this.physics,
   });
 
   final List<Property> properties;
+  final bool asSliver;
   final bool shrinkWrap;
   final ScrollPhysics physics;
 
   @override
   Widget build(BuildContext context) {
     if (properties.isEmpty) {
-      return const Center(child: Text('No properties found'));
+      const empty = Center(child: Text('No properties found'));
+      return asSliver ? const SliverToBoxAdapter(child: empty) : empty;
     }
 
     return MultiBlocProvider(
@@ -92,36 +95,51 @@ class _PropertyListView extends StatelessWidget {
       ],
       child: BlocListener<PropertyDetailsCubit, PropertyDetailsState>(
         listener: _handlePropertyDetailsState,
-        child: ListView.separated(
-          padding: const EdgeInsets.only(bottom: 16),
-          shrinkWrap: shrinkWrap,
-          physics: physics,
-          itemCount: properties.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final property = properties[index];
-            final favCubit = sl<ToggleFavoriteCubit>();
-            debugPrint(
-              'FAV DEBUG -> id: ${property.id} | api: ${property.isFavourite} | '
-              'override: ${favCubit.isFavorited(property.id)} | closed: ${favCubit.isClosed}',
-            );
-            return PropertyCard(
-              key: ValueKey(property.id),
-              id: property.id,
-              sqft: property.area,
-              baths: property.bathrooms,
-              beds: property.bedrooms,
-              imageUrl: property.images.isNotEmpty ? property.images[0] : '',
-              price: property.price,
-              title: property.title ?? '',
-              listingType: property.location?.city ?? property.listingType,
-              isVerified: true,
-              initialIsFavorite: property.isFavourite,
-              onTap: () => context.read<PropertyDetailsCubit>().propertyDetails(
-                property.id,
-              ),
-            );
-          },
+        child: asSliver ? _buildSliverList() : _buildBoxList(),
+      ),
+    );
+  }
+
+  Widget _buildSliverList() {
+    return SliverList.separated(
+      itemCount: properties.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      itemBuilder: (context, index) => _buildCard(properties[index], context),
+    );
+  }
+
+  Widget _buildBoxList() {
+    return ListView.separated(
+      padding: const EdgeInsets.only(bottom: 16),
+      shrinkWrap: shrinkWrap,
+      physics: physics,
+      itemCount: properties.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      itemBuilder: (context, index) => _buildCard(properties[index], context),
+    );
+  }
+
+  Widget _buildCard(Property property, BuildContext context) {
+
+    return RepaintBoundary(
+    
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: PropertyCard(
+          key: ValueKey(property.id),
+          id: property.id,
+          sqft: property.area,
+          baths: property.bathrooms,
+          beds: property.bedrooms,
+          imageUrl: property.images.isNotEmpty ? property.images[0] : '',
+          price: property.price,
+          title: property.title ?? '',
+          listingType: property.location?.city ?? property.listingType,
+          isVerified: true,
+          initialIsFavorite: property.isFavourite,
+          onTap: () => context
+              .read<PropertyDetailsCubit>()
+              .propertyDetails(property.id),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
@@ -22,7 +23,7 @@ class ImageGallery extends StatelessWidget {
   final int currentIndex;
   final PageController pageController;
   final ValueChanged<int> onPageChanged;
-  final bool isFavorite; // القيمة القادمة من الـ API
+  final bool isFavorite;
   final int propertyId;
 
   @override
@@ -49,10 +50,24 @@ class ImageGallery extends StatelessWidget {
                 onPageChanged: onPageChanged,
                 itemCount: images.length,
                 itemBuilder: (context, index) {
-                  return Image.network(
-                    images[index],
+                  return CachedNetworkImage(
+                    imageUrl: images[index],
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    memCacheWidth:
+                        (MediaQuery.of(context).size.width *
+                                MediaQuery.of(context).devicePixelRatio)
+                            .round(),
+                    placeholder: (context, url) => Container(
+                      color: AppColors.textFieldColor,
+                      child: const Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
                       color: AppColors.textFieldColor,
                       child: Icon(
                         Icons.image_not_supported_outlined,

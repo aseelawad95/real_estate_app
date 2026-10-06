@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_estate/common/button/button_cubit.dart';
 import 'package:real_estate/common/widgets/basic_app_button.dart';
-import 'package:real_estate/common/widgets/custom_btn.dart';
 import 'package:real_estate/common/widgets/custom_text.dart';
 import 'package:real_estate/common/widgets/custom_textfield.dart';
 import 'package:real_estate/core/constants/app_colors.dart';
